@@ -1,0 +1,33 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  relationMode      = "prisma"
+}
+
+enum VerificationCodeType {
+  EMAIL
+}
+
+model User {
+  id             String          @id @default(uuid())
+  name           String?
+  cover          String?
+  about          String?         @db.VarChar(900)
+  email          String?         @unique
+  avatar         String?
+  address        String          
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  privateKey     String?         @db.VarChar(900)
+  socialMedia    Json?
+  verifiedEmail  Boolean         @default(false)
+  activeMember   Boolean         @default(false)
+  whatsappNumber String?         @unique
+
+  @@map("users")
+}
