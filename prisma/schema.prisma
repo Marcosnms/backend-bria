@@ -16,18 +16,26 @@ enum VerificationCodeType {
 model User {
   id             String          @id @default(uuid())
   name           String?
-  cover          String?
-  about          String?         @db.VarChar(900)
-  email          String?         @unique
-  avatar         String?
-  address        String          
+  whatsappNumber String?         @unique
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   privateKey     String?         @db.VarChar(900)
-  socialMedia    Json?
   verifiedEmail  Boolean         @default(false)
-  activeMember   Boolean         @default(false)
-  whatsappNumber String?         @unique
+  Member         Boolean         @default(false)
 
   @@map("users")
 }
+
+model Chat {
+  id            String   @id @default(uuid())
+  userId        String
+  message       String
+  createdAt     DateTime @default(now())
+  createdByUser Boolean 
+
+  @@map("chats")
+  @@index([userId])
+  @@index([createdAt])
+  @@index([userId, createdAt])
+}
+
