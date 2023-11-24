@@ -2,13 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-// Configuração do Express
+// Configuração do Express -ok
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Importar rotas
+// Importar rotas -ok
 const userRoutes = require('./src/api/routes/userRoutes');
 
 // Definir rotas
