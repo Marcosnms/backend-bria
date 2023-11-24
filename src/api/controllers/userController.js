@@ -1,7 +1,9 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-
+exports.teste = async (req, res) => {
+  return res.status(200).json({ message: 'Server is running' });
+};
 
 exports.createUserAccount = async (req, res) => {
   const { name, whatsappNumber } = req.body;

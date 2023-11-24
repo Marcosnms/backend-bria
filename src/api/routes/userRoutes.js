@@ -4,11 +4,10 @@ const authMiddleware = require('../middlewares/authMiddleware'); // Importa o mi
 
 const router = express.Router();
 
-// Webhooks Whatsapp
-
+// Teste server
+router.post('/', userController.teste); // Teste server
 
 // Chat 
-
 
 
 
