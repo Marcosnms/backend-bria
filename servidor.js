@@ -9,8 +9,8 @@ const chatRoutes = require('./src/api/routes/chatRoutes');
 const interactionRoutes = require('./src/api/routes/interactionRoutes');
 
 // Importação de middlewares
-const whatsappMiddleware = require('./middlewares/whatsappMiddleware');
-const openaiMiddleware = require('./middlewares/openaiMiddleware');
+const whatsappMiddleware = require('./src/api/middlewares/whatsappMiddleware');
+const openaiMiddleware = require('./src/api/middlewares/openaiMiddleware');
 
 // Configuração do dotenv
 dotenv.config();
