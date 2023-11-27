@@ -15,13 +15,12 @@ const userController = {
                     name,
                     whatsappNumber,
                     privateKey: hashedPassword,
-                    createdAt: new Date.now(),
                 }
             });
 
             res.status(201).json({ message: "Usuário criado com sucesso!", user: newUser });
         } catch (error) {
-            res.status(500).json({ error: "Erro ao criar a conta do usuário" });
+            res.status(500).json({ error: "Erro ao criar a conta do usuário", message: error.message });
         }
     },
 

@@ -4,6 +4,7 @@
   "description": "Backend para aplicação de gerenciamento de usuários e interações de chat",
   "main": "servidor.js",
   "scripts": {
+    "test": "jest",
     "start": "node servidor.js",
     "dev": "nodemon servidor.js"
   },
@@ -24,6 +25,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.6.0",
+    "jest": "^29.7.0",
     "openai": "^4.20.0"
   }
 }
