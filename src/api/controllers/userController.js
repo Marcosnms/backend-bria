@@ -27,18 +27,13 @@ const userController = {
     // Login do usuário
     loginUser: async (req, res) => {
         try {
-            const { email, privateKey } = req.body;
+            const { whatsappNumber } = req.body;
             const user = await prisma.user.findUnique({
-                where: { email }
+                where: { whatsappNumber }
             });
 
             if (!user) {
                 return res.status(404).json({ error: "Usuário não encontrado." });
-            }
-
-            const isMatch = await bcrypt.compare(privateKey, user.privateKey);
-            if (!isMatch) {
-                return res.status(400).json({ error: "Senha inválida." });
             }
 
             const payload = { userId: user.id, name: user.name };
