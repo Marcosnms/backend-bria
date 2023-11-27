@@ -58,8 +58,9 @@ app.get("/webhook", (req, res) => {
 
 // Rota de teste (opcional)
 app.get('/', (req, res) => {
-    res.send('Backend BRIA está funcionando!');
+    res.send('Backend da BRIA está funcionando!');
 });
+
 
 // Iniciar o servidor
 const PORT = process.env.PORT || 3000;
