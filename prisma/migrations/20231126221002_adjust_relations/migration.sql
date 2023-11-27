@@ -5,7 +5,8 @@ CREATE TYPE "VerificationCodeType" AS ENUM ('EMAIL');
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
     "name" TEXT,
-    "whatsappNumber" TEXT,
+    "email" TEXT,
+    "whatsappNumber" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "privateKey" VARCHAR(900),
@@ -25,6 +26,9 @@ CREATE TABLE "chats" (
 
     CONSTRAINT "chats_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_whatsappNumber_key" ON "users"("whatsappNumber");

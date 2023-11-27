@@ -1,12 +1,11 @@
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  relationMode      = "prisma"
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 enum VerificationCodeType {
@@ -14,14 +13,17 @@ enum VerificationCodeType {
 }
 
 model User {
-  id             String          @id @default(uuid())
+  id             String        @id @default(uuid())
   name           String?
-  whatsappNumber String?         @unique
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  privateKey     String?         @db.VarChar(900)
-  verifiedEmail  Boolean         @default(false)
-  Member         Boolean         @default(false)
+  email          String?       @unique
+  whatsappNumber String        @unique
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  privateKey     String?       @db.VarChar(900)
+  verifiedEmail  Boolean       @default(false)
+  Member         Boolean       @default(false)
+  chats          Chat[] // Adiciona um campo de relação aqui
+  Interaction    Interaction[]
 
   @@map("users")
 }
@@ -29,13 +31,24 @@ model User {
 model Chat {
   id            String   @id @default(uuid())
   userId        String
+  user          User     @relation(fields: [userId], references: [id])
   message       String
   createdAt     DateTime @default(now())
-  createdByUser Boolean 
+  createdByUser Boolean
 
-  @@map("chats")
   @@index([userId])
   @@index([createdAt])
   @@index([userId, createdAt])
+  @@map("chats")
 }
 
+model Interaction {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  content       String
+  createdByUser Boolean  @default(true) // true se criado pelo usuário, false se pelo sistema
+  createdAt     DateTime @default(now())
+
+  @@map("interactions")
+}

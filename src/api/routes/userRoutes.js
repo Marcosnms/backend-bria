@@ -1,12 +1,14 @@
 const express = require('express');
-const userController = require('../controllers/userController');
-const authMiddleware = require('../middlewares/authMiddleware'); // Importa o middleware de autenticação
-
 const router = express.Router();
+const userController = require('../controllers/userController');
 
-// Teste server
-router.post('/teste', userController.teste); // Teste server
+// Rota para registro de novo usuário
+router.post('/register', userController.createUserAccount);
 
-// Chat 
+// Rota para login do usuário
+router.post('/login', userController.loginUser);
+
+// Outras rotas relacionadas aos usuários podem ser adicionadas aqui
+// Exemplo: Atualizar perfil, recuperar informações do usuário, etc.
 
 module.exports = router;
