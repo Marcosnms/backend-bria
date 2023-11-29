@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
+
 // Importação de rotas
 const userRoutes = require('./src/api/routes/userRoutes');
 const chatRoutes = require('./src/api/routes/chatRoutes');
@@ -30,22 +31,19 @@ app.use('/api/users', userRoutes);
 app.use('/api/chats', chatRoutes);
 app.use('/api/interactions', interactionRoutes);
 
-
 // Rota de webhook para o WhatsApp
-app.post('/webhook', (req, res) => {
+app.post('/webhook', whatsappMiddleware, openaiMiddleware, (req, res) => {
 
-    res.send('webhook chegou!');
+    if (req.whatsapp && req.openaiResponse) {
+        const { whatsappNumber, from } = req.whatsapp;
+        const replyMessage = req.openaiResponse;
+        whatsappMiddleware.sendReply(whatsappNumber, process.env.WHATSAPP_TOKEN, from, replyMessage, res);
 
-    // if (req.whatsapp && req.openaiResponse) {
-    //     const { phone_number_id, from } = req.whatsapp;
-    //     const replyMessage = req.openaiResponse;
-    //     whatsappMiddleware.sendReply(phone_number_id, process.env.WHATSAPP_TOKEN, from, replyMessage, res);
-    // } else {
-    //     res.status(500).send('Erro ao processar a mensagem');
-    // }
+    } else {
+        res.status(500).send('Erro ao processar a mensagem');
+    }
 });
 
-const token = process.env.WHATSAPP_TOKEN
 // Rota de verificação do webhook (necessária para a configuração inicial do webhook)
 app.get("/webhook", (req, res) => {
     
