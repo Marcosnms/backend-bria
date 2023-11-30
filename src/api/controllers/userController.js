@@ -17,10 +17,9 @@ const userController = {
                     privateKey: hashedPassword,
                 }
             });
-
-            res.status(201).json({ message: "Usuário criado com sucesso!", user: newUser });
+            console.log("usuario criado com sucesso")
         } catch (error) {
-            res.status(500).json({ error: "Erro ao criar a conta do usuário", message: error.message });
+            console.log("erro ao criar usuario", error)
         }
     },
 
@@ -39,9 +38,9 @@ const userController = {
             const payload = { userId: user.id, name: user.name };
             const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
 
-            res.status(200).json({ message: "Login bem-sucedido!", token });
+
         } catch (error) {
-            res.status(500).json({ error: "Erro ao tentar logar." });
+
         }
     },
 

@@ -38,7 +38,7 @@ app.post(
   handleMessages,
   openaiMiddleware,
   (req, res) => {
-    const { whatsappNumber, from, name } = req.whatsapp;
+    const { whatsappNumber, from } = req.whatsapp;
 
     console.log("chegou no webhook");
  

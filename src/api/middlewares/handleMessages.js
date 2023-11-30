@@ -1,16 +1,19 @@
+const chatController = require("../controllers/chatController");
 const interactionController = require("../controllers/interactionController");
 const userController = require("../controllers/userController");
 
 const handleMessages = async (req, res, next) => {
   console.log("chegou no handleMessages");
-  const { from, name } = req.whatsapp;
+  const { from, name, msg_body } = req.whatsapp;
+
   try {
-    // Verificar se usuário existe e buscar o id dele
+    // OK Verificar se usuário existe e buscar o id dele
     const { exists, userId } =
       await interactionController.findUserByWhatsappNumber(from);
 
     if (!exists) {
-      // Usuário não encontrado, criar conta
+      // OK: Usuário não encontrado, criar conta
+      console.log("usuário não existe");
       const createUserReq = {
         body: {
           name: name, // Supondo que 'name' esteja disponível em req.whatsapp
@@ -18,16 +21,27 @@ const handleMessages = async (req, res, next) => {
           privateKey: "Borogoland@954:)", // Substitua com o valor real conforme necessário
         },
       };
-      await userController.createUserAccount(createUserReq, res);
+      await userController.createUserAccount(createUserReq);
+      // OK: salvar a mensagem enviada no histórico de interações
+      req.openaiResponse = `Olá ${name}! Tudo bem com você? Sou a BRIA, a assistente inteligente da Borogoland e estou aqui para fazer seu processo de boas-vindas. Para começar, que tal me falar sobre você?`;
+        console.log("salvou a interação");
+        next();
 
-      next();
     } else {
-      // Usuário existe, userID disponível para uso
-      console.log("usuario existe:", userId);
-      next();
-      // 1. verificar se é uma nova conversa ou uma conversa ativa
-      // 2. se for uma nova conversa, enviar opções disponíveis ao usuário
-      // 3. se for uma conversa ativa, analisar histórico e responder de acordo com os processos de comunicação
+        console.log("usuário já existe")
+        console.log("mensagem:", msg_body);
+        await chatController.saveChatMessage(userId, msg_body);
+        req.openaiResponse = "Agora vai!";
+        next();
+        // // OK: Usuário encontrado, analisar interações
+        // const analyzeInteractionsReq = {
+        //     params: { userId },
+        // };
+        // await interactionController.analyzeInteractions(
+        //     analyzeInteractionsReq,
+        //     res
+        // );
+        
     }
   } catch (error) {
     console.error("Erro ao processar webhook:", error);
