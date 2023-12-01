@@ -10,7 +10,7 @@ const interactionController = {
       });
 
       if (!user) {
-        return { exists: false, userId: null };
+        return { exists: null, userId: null };
       }
 
       return { exists: true, userId: user.id };

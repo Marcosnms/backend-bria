@@ -22,17 +22,16 @@ const handleMessages = async (req, res, next) => {
         },
       };
       await userController.createUserAccount(createUserReq);
+
       // OK: salvar a mensagem enviada no histórico de interações
-      req.openaiResponse = `Olá ${name}! Tudo bem com você? Sou a BRIA, a assistente inteligente da Borogoland e estou aqui para fazer seu processo de boas-vindas. Para começar, que tal me falar sobre você?`;
+      req.openaiResponse = `Olá ${name}! Tudo bem com você? Eu sou a BRIA, a assistente inteligente da Borogoland e estou aqui para fazer seu processo de boas-vindas. Para começar, que tal me falar sobre você?`;
         console.log("salvou a interação");
         next();
 
     } else {
         console.log("usuário já existe")
-        console.log("mensagem:", msg_body);
-        await chatController.saveChatMessage(userId, msg_body);
-        req.openaiResponse = "Agora vai!";
-        next();
+          await chatController.saveChatMessage(userId, msg_body);
+
         // // OK: Usuário encontrado, analisar interações
         // const analyzeInteractionsReq = {
         //     params: { userId },
@@ -41,7 +40,7 @@ const handleMessages = async (req, res, next) => {
         //     analyzeInteractionsReq,
         //     res
         // );
-        
+        next();
     }
   } catch (error) {
     console.error("Erro ao processar webhook:", error);

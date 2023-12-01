@@ -1,3 +1,4 @@
+const { Console } = require("console");
 const https = require("https");
 
 const whatsappMiddleware = (req, res, next) => {
@@ -9,6 +10,7 @@ const whatsappMiddleware = (req, res, next) => {
   //   console.log(JSON.stringify(req.body, null, 2));
 
   if (req.body.object) {
+
     if (
       req.body.entry &&
       req.body.entry[0].changes &&
@@ -19,16 +21,18 @@ const whatsappMiddleware = (req, res, next) => {
       let whatsappNumber =
         req.body.entry[0].changes[0].value.metadata.phone_number_id;
       let from = req.body.entry[0].changes[0].value.messages[0].from; // extract the phone number from the webhook payload
-      let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body; // extract the message text from the webhook payload
       let name = req.body.entry[0].changes[0].value.contacts[0].profile.name;
+      let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body; // extract the message text from the webhook payload
+      let msg_type = req.body.entry[0].changes[0].value.messages[0].type; // extract the message type from the webhook payload
 
-      console.log("dados:", whatsappNumber, from, msg_body, name);
+      console.log("dados:", whatsappNumber, from, msg_body, name, msg_type);
       // Anexa as informações extraídas à solicitação para uso posterior
       req.whatsapp = {
         whatsappNumber,
         from,
         msg_body,
         name,
+        msg_type,
       };
       next();
     }
@@ -57,7 +61,7 @@ whatsappMiddleware.sendReply = (
   });
 
   const path =
-    "/v16.0/" + whatsappNumber + "/messages?access_token=" + whatsapp_token;
+    "/v18.0/" + whatsappNumber + "/messages?access_token=" + whatsapp_token;
   const options = {
     host: "graph.facebook.com",
     path: path,

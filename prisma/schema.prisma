@@ -21,7 +21,8 @@ model User {
   updatedAt      DateTime      @updatedAt
   privateKey     String?       @db.VarChar(900)
   verifiedEmail  Boolean       @default(false)
-  Member         Boolean       @default(false)
+  member         Boolean       @default(false)
+  activeConversation Boolean   @default(false)
   chats          Chat[] // Adiciona um campo de relação aqui
   Interaction    Interaction[]
 
