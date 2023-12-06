@@ -40,11 +40,23 @@ const interactionController = {
         // Conversa ativa
         console.log("conversa ativa");
 
+        // TODO: verificar se a mensagem é uma resposta a uma pergunta
+        
+        // TODO: salvar a mensagem no histórico de interações: CONVERSA
+
+
+
         return res.status(200).json({ message: "Conversa já em andamento" });
+
       } else {
         // Nova conversa
         console.log("nova conversa");
-        // Lógica para nova conversa (a mensagem será enviada em outro lugar)
+
+        // TODO: salvar a mensagem no histórico de interações: OPÇÕES
+
+        // TODO: enviar listagem de opções para o usuário
+
+
         return res.status(200).json({ message: "Nova conversa detectada." });
       }
     } catch (error) {

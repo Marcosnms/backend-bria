@@ -3,13 +3,27 @@ const prisma = new PrismaClient();
 
 const chatController = {
     // Armazenar uma mensagem de chat
-    saveChatMessage: async (userId, message) => {
+    saveUserMessage: async (userId, message) => {
         try {
             const newMessage = await prisma.chat.create({
                 data: {
                     userId,  // Assumindo que você tem uma relação com o usuário
                     message, 
                     createdByUser: true, // Assumindo que a mensagem foi enviada pelo usuário
+                }
+            });
+        } catch (error) {
+            console.log("Erro ao salvar mensagem de chat:", error);
+        }
+    },
+
+    saveReplyMessage: async (userId, message) => {
+        try {
+            const newMessage = await prisma.chat.create({
+                data: {
+                    userId,  // Assumindo que você tem uma relação com o usuário
+                    message, 
+                    createdByUser: false, // Assumindo que a mensagem foi enviada pelo usuário
                 }
             });
         } catch (error) {

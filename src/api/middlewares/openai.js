@@ -1,11 +1,18 @@
 const { Configuration, OpenAI } = require("openai");
+const chatController = require("../controllers/chatController");
 
 const openaiMiddleware = async (req, res, next) => {
     console.log("chegou no openaiMiddleware")
 
-    if (req.openaiResponse) {
+    // const { userId } = req.user;
+
+    // Caso a resposta já exista, não é necessário chamar a OpenAI novamente
+    if (req.response) {
         console.log("resposta já existe")
         next();
+
+    // Caso contrário, verificar o contexto e chamar a OpenAI de forma apropriada. 
+    // TODO: Definir contextos e objetivos de conversão
     } else {
         if (req.whatsapp) {
             console.log("foi pra ai responder")
@@ -29,14 +36,28 @@ const openaiMiddleware = async (req, res, next) => {
                     ],
                 });
     
-                req.openaiResponse = completion.choices[0].message.content;
+                req.response = {
+                    message: completion.choices[0].message.content,
+                    type: "text",
+                    flow: "03",
+                };
 
-                console.log("Resposta:", req.openaiResponse);
+                console.log("Resposta:", req.response);
             } catch (e) {
                 console.error("Erro ao interagir com a OpenAI: " + e);
-                req.openaiResponse = "Desculpe, pode repetir?";
+                req.response = {    
+                    message: "Desculpe, não entendi. Poderia repetir?", 
+                    type: "text",
+                    flow: "99",
+                };
             }
         }
+
+        // Salva a resposta enviada
+        // console.log("salvando resposta")    
+
+//        await chatController.saveReplyMessage(userId, req.response.message);
+
         next();
     }
     
