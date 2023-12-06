@@ -40,22 +40,23 @@ const interactionController = {
         // Conversa ativa
         console.log("conversa ativa");
 
-        // TODO: verificar se a mensagem é uma resposta a uma pergunta
-        
+        // TODO: analisar o histórico de interações e enviar a próxima orientação
+
         // TODO: salvar a mensagem no histórico de interações: CONVERSA
+        await interactionController.saveUserInteraction(userId, "CONVERSA");
 
+        return ;
 
-
-        return res.status(200).json({ message: "Conversa já em andamento" });
 
       } else {
         // Nova conversa
         console.log("nova conversa");
 
-        // TODO: salvar a mensagem no histórico de interações: OPÇÕES
-
+        await interactionController.saveUserInteraction(
+          userId,
+          "NOVA_CONVERSA"
+        );
         // TODO: enviar listagem de opções para o usuário
-
 
         return res.status(200).json({ message: "Nova conversa detectada." });
       }
@@ -65,17 +66,19 @@ const interactionController = {
   },
 
   // Armazenar uma interação
-  saveInteraction: async (req) => {
+  saveUserInteraction: async (userId, content) => {
     try {
-      const { userId, content } = req.body;
-
+      if (!userId || !content) {
+        throw "Dados insuficientes para salvar interação";
+      } else {
       const newInteraction = await prisma.interaction.create({
         data: {
           userId, // Assumindo que você tem uma relação com o usuário
           content, // Conteúdo da interação
+          createdByUser: true,
         },
       });
-
+    }
       console.log("interação salva");
     } catch (error) {
       console.log("Erro ao salvar interação:", error);

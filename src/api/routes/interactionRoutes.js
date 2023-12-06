@@ -3,7 +3,7 @@ const router = express.Router();
 const interactionController = require('../controllers/interactionController');
 
 // Rota para salvar uma interação
-router.post('/save', interactionController.saveInteraction);
+router.post('/save', interactionController.saveUserInteraction);
 
 // Rota para analisar interações de um usuário
 router.get('/analyze/:userId', interactionController.analyzeInteractions);

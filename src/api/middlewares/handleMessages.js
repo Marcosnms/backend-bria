@@ -30,13 +30,26 @@ const handleMessages = async (req, res, next) => {
         flow: "01",
       };
       console.log("novo usuário criado");
+      const { exists, userId } =
+      await interactionController.findUserByWhatsappNumber(from);
+      await interactionController.saveUserInteraction(userId, "CHEGADA");
+
+
       next();
     } else {
       console.log("usuário já existe");
       await chatController.saveUserMessage(userId, msg_body);
       console.log("mensagem salva no chat");
-      // req.user = { userId };
+      req.user = { userId };
 
+
+      // const msg_type = req.whatsapp.msg_type;
+
+      // if (msg_type === "text") {
+      //   console.log("mensagem de texto");
+      //   // OK: Usuário encontrado, analisar interações
+      //   const analise = await interactionController.analyzeInteractions(userId);
+      // }
       // TODO: verificar o tipo de informação
       
 
@@ -58,11 +71,7 @@ const handleMessages = async (req, res, next) => {
       //     analyzeInteractionsReq,
       //     res
       // );
-      req.response = {
-        message: "teste",
-        type: "text",
-        flow: "02",
-      };
+
       next();
     }
   } catch (error) {

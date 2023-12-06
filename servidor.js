@@ -44,68 +44,20 @@ app.post(
     console.log("chegou no webhook");
 
     if (req.whatsapp && req.response) {
+      const replyMessage = req.response.message;
 
-      whatsappMiddleware.sendListMessage2(
-        whatsappNumber,
-        process.env.WHATSAPP_TOKEN,
-        from,
-        res
-      );
-
-      // if (req.response.type === "text") {
-      //   // Envia uma mensagem de texto
-      //   whatsappMiddleware
-      //     .sendText(
-      //       whatsappNumber,
-      //       process.env.WHATSAPP_TOKEN,
-      //       from,
-      //       replyMessage
-      //     )
-      //     .then(() => {
-      //       if (req.response.flow === "01") {
-      //         // Se for um novo usuário, aguarde e envie a lista de opções
-      //         console.log("esperando 1 segundos");
-      //         return new Promise((resolve) => setTimeout(resolve, 1000)).then(
-      //           () => {
-      //             return whatsappMiddleware.sendListMessage(
-      //               whatsappNumber,
-      //               process.env.WHATSAPP_TOKEN,
-      //               from
-      //             );
-      //           }
-      //         );
-      //       }
-      //     })
-      //     .then(() => {
-      //       console.log("mensagem enviada");
-      //       res.sendStatus(200); // Envie a resposta HTTP após todas as ações
-      //     })
-      //     .catch((error) => {
-      //       console.error("Erro ao enviar mensagem:", error);
-      //       res.status(500).send("Erro interno do servidor");
-      //     });
-      // } else if (req.response.type === "interative") {
-      //   // 02. ENVIA UMA LISTA DE OPÇÕES
-      //   whatsappMiddleware.sendText(
-      //     whatsappNumber,
-      //     process.env.WHATSAPP_TOKEN,
-      //     from,
-      //     "Desculpe, ainda não tenho o poder de processar imagens... está chegando em breve. Mas por enquanto, por gentileza, tente novamente utilizando um texto.",
-      //   );
-
-      //   console.log("mensagem interativa");
-      // } else if (req.response.type === "image") {
-      //   // 03. ENVIA UMA IMAGEM
-      //   whatsappMiddleware.sendText(
-      //     whatsappNumber,
-      //     process.env.WHATSAPP_TOKEN,
-      //     from,
-      //     "Desculpe, ainda não tenho o poder de processar imagens... está chegando em breve. Mas por enquanto, por gentileza, tente novamente utilizando um texto.",
-      //   );
-
-      //   console.log("mensagem de imagem");
-      // }
+      if (req.response.type === "text") {
+        // Envia uma mensagem de texto
+        whatsappMiddleware.sendText(
+          whatsappNumber,
+          process.env.WHATSAPP_TOKEN,
+          from,
+          replyMessage,
+          res
+        );
+      }
     } else {
+      console.log("outro tipo de mensagem");
       res.status(500).send("Erro ao processar a mensagem");
     }
   }
