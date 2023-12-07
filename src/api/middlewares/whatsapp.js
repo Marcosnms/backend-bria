@@ -99,7 +99,7 @@ const whatsappMiddleware = (req, res, next) => {
       // 03. CASO OUTRA MENSAGEM SEJA ENVIADA
       else {
         // TODO: ajustar a resposta para dizer que não aceita esse tipo de mensagem no momento
-        console.log("Mensagem não suportada");
+        console.log("Aqui depois vai a rota para confirmações de status das mensagens");
       }
     }
   }

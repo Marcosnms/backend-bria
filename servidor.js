@@ -15,6 +15,10 @@ const whatsappMiddleware = require("./src/api/middlewares/whatsapp");
 const openaiMiddleware = require("./src/api/middlewares/openai");
 const handleMessages = require("./src/api/middlewares/handleMessages");
 
+// Importação de Serviços
+const messageService = require("./src/api/services/messageService");
+const optionsService = require("./src/api/services/optionsService");
+
 // Configuração do dotenv
 dotenv.config();
 
@@ -30,6 +34,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api/users", userRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/interactions", interactionRoutes);
+
 
 // Rota de webhook para o WhatsApp
 
@@ -55,6 +60,7 @@ app.post(
           replyMessage,
           res
         );
+        
       }
     } else {
       console.log("outro tipo de mensagem");
@@ -80,6 +86,30 @@ app.get("/webhook", (req, res) => {
   }
 });
 
+app.post('/webmsg', (req, res) => {
+  console.log('chegou no webmsgevent');
+
+  messageService(
+    req.body.whatsappNumber,
+    req.body.whatsapp_token,
+    req.body.to,
+    req.body.message) 
+
+  console.log(req.body);
+  res.status(200).send('ok');
+});
+
+app.post('/optionmsg', (req, res) => {
+  console.log('chegou no webmsgevent');
+
+  optionsService(
+    req.body.whatsappNumber,
+    req.body.whatsapp_token,
+    req.body.to)
+
+  console.log(req.body);
+  res.status(200).send('ok');
+});
 // Rota de teste (opcional)
 app.get("/", (req, res) => {
   res.send("Backend da BRIA está funcionando!");

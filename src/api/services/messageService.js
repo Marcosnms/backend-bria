@@ -1,7 +1,9 @@
 const axios = require('axios');
 
-async function enviarTexto (whatsappNumber, whatsapp_token, to, message) {
+const messageService = async (whatsappNumber, whatsapp_token, to, message) => {
     try {
+        console.log("chegou no messageService")
+        console.log(whatsappNumber, whatsapp_token, to, message)   
         const data = {
             messaging_product: "whatsapp",
             to: to,
@@ -25,5 +27,4 @@ async function enviarTexto (whatsappNumber, whatsapp_token, to, message) {
     }
 }
 
-// Uso da função
-enviarTexto ('SEU_NUMERO_WHATSAPP', 'SEU_TOKEN_WHATSAPP', 'NUMERO_DESTINO', 'Olá, esta é uma mensagem do WhatsApp!');
+module.exports = messageService;
