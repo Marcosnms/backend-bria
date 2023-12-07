@@ -4,7 +4,7 @@ const https = require("https");
 const whatsappMiddleware = (req, res, next) => {
   console.log("chegou no whatsappMiddleware");
 
-  // console.log("req.body:", JSON.stringify(req.body, null, 2));
+  console.log("req.body:", JSON.stringify(req.body, null, 2));
 
   if (req.body.object) {
     if (
@@ -14,15 +14,16 @@ const whatsappMiddleware = (req, res, next) => {
       req.body.entry[0].changes[0].value.messages &&
       req.body.entry[0].changes[0].value.messages[0]
     ) {
-      let whatsappNumber =
+      const whatsappNumber =
         req.body.entry[0].changes[0].value.metadata.phone_number_id;
-      let from = req.body.entry[0].changes[0].value.messages[0].from; // extract the phone number from the webhook payload
-      let name = req.body.entry[0].changes[0].value.contacts[0].profile.name;
-      let msg_type = req.body.entry[0].changes[0].value.messages[0].type; // extract the message type from the webhook payload
+      const from = req.body.entry[0].changes[0].value.messages[0].from; // extract the phone number from the webhook payload
+      const name = req.body.entry[0].changes[0].value.contacts[0].profile.name;
+      const msg_type = req.body.entry[0].changes[0].value.messages[0].type; // extract the message type from the webhook payload
 
       // 01. CASO A MENSAGEM SEJA DE TEXTO
       if (msg_type === "text") {
-        let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body; // extract the message text from the webhook payload
+        const msg_body =
+          req.body.entry[0].changes[0].value.messages[0].text.body; // extract the message text from the webhook payload
 
         // Anexa as informações extraídas à solicitação para uso posterior
         req.whatsapp = {
@@ -42,6 +43,15 @@ const whatsappMiddleware = (req, res, next) => {
 
         if (messageData.interactive.type === "list_reply") {
           const selectedOptionId = messageData.interactive.list_reply.id;
+
+          // Anexa as informações extraídas à solicitação para uso posterior
+          req.whatsapp = {
+            whatsappNumber,
+            from,
+            msg_body: "resposta interativa",
+            name,
+            msg_type,
+          };
 
           // OPÇÕES DISPONÍVEIS
           switch (selectedOptionId) {
@@ -66,6 +76,7 @@ const whatsappMiddleware = (req, res, next) => {
                 type: "text",
                 flow: "02",
               };
+
               next();
               break;
 
@@ -99,7 +110,9 @@ const whatsappMiddleware = (req, res, next) => {
       // 03. CASO OUTRA MENSAGEM SEJA ENVIADA
       else {
         // TODO: ajustar a resposta para dizer que não aceita esse tipo de mensagem no momento
-        console.log("Aqui depois vai a rota para confirmações de status das mensagens");
+        console.log(
+          "Aqui depois vai a rota para confirmações de status das mensagens"
+        );
       }
     }
   }
