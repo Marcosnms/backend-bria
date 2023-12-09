@@ -9,40 +9,51 @@ const optionService = async (whatsappNumber, whatsapp_token, to) => {
       type: "list",
       header: {
         type: "text",
-        text: "Menu de Opções",
+        text: "☰  Menu de Opções ",
       },
       body: {
-        text: "Escolha uma opção:",
+        text: "Escolha uma opção abaixo e deixe a magia acontecer! 🌟",
       },
       footer: {
-        text: "Borogoland",
+        text: "BRIA, a Inteligência Coletiva da Borogoland",
       },
       action: {
-        button: "Opções",
+        button: "escolher",
         sections: [
           {
-            title: "Menu Principal",
+            title: "Listagem de Serviços",
             rows: [
               {
-                id: "borogoland_info",
-                title: "Sobre a Borogoland",
-                description: "Saiba mais sobre a Borogoland",
+                id: "user_profile",
+                title: "👤 Seu perfil",
+                description: "Configure seus objetivos, suas preferências e defina o SEU Borogodó!",
+              },
+              {
+                id: "upgrade_2024",
+                title: "🚀 Upgrade KIT 2024",
+                description: "Tudo o que você precisa saber em tecnologia para 2024",
               },
               {
                 id: "useful_links",
-                title: "Links Úteis",
-                description: "Acesse links úteis",
+                title: "🔗 Links úteis",
+                description: "Acesse recursos escolhidos a dedo para você!",
               },
               {
                 id: "members_area",
-                title: "Área de Membros",
-                description: "Informações sobre a área de membros",
+                title: "👥 Área de Membros",
+                description: "Eventos, Mentorias, Notificações, Ferramentas, Suporte e Acompanhamento.",
               },
               {
-                id: "user_profile",
-                title: "Perfil do Usuário",
-                description: "Veja seu perfil",
+                id: "borogoland_info",
+                title: "🌍 Sobre a Borogoland",
+                description: "Descubra mais sobre nosso funcionamento e como participar.",
               },
+              {
+                id: "central_servicos",
+                title: "💡Serviços Criativos ",
+                description: "Procurando um serviço criativo? Explore a Central de Serviços.",
+              },
+ 
             ],
           },
         ],

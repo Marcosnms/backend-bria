@@ -48,9 +48,11 @@ app.post(
 
     console.log("chegou no webhook");
 
+    // FLOW 04 - ENVIAR RESPOSTA PARA O USUÁRIO
     if (req.whatsapp && req.response) {
       const replyMessage = req.response.message;
 
+        console.log("FLOW:", res.flow)
       if (req.response.type === "text") {
         // Envia uma mensagem de texto
         whatsappMiddleware.sendText(
@@ -60,6 +62,18 @@ app.post(
           replyMessage,
           res
         );
+
+        // se for o primeiro acesso
+
+        if (req.response.flow === "01") {
+          setTimeout(() => {
+            optionsService(
+              whatsappNumber,
+              process.env.WHATSAPP_TOKEN,
+              from
+            );
+          }, 3000); // 000 milissegundos equivalem a 1 segundo
+        }
         
       }
     } else {

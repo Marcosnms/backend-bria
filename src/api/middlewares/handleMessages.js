@@ -7,41 +7,82 @@ const handleMessages = async (req, res, next) => {
   const { from, name, msg_body } = req.whatsapp;
 
   try {
-    // OK Verificar se usuário existe e buscar o id dele
+
+    // FLOW 00 - VERIFICAR COM QUE ESTAMOS FALANDO
+    // Verificar se usuário existe e buscar o id dele - OK
     const { exists, userId } =
       await interactionController.findUserByWhatsappNumber(from);
 
     if (!exists) {
-      // OK: Usuário não encontrado, criar conta
+
+      // FLOW 01 - USUÁRIO NAO EXISTE 
+      // Usuário não encontrado, criar conta - OK
       console.log("usuário não existe");
-      const createUserReq = {
+      const newUser = {
         body: {
-          name: name, // Supondo que 'name' esteja disponível em req.whatsapp
+          name: name, 
           whatsappNumber: from,
-          privateKey: "Borogoland@954:)", // Substitua com o valor real conforme necessário
+          privateKey: "adskflja08q3w47r5wjsd098upolkfasdf-98aiasçdasdfasdfasdf2q133241g4~]=8906klfasd", // Substitua com o valor real conforme necessário
         },
       };
-      await userController.createUserAccount(createUserReq);
+
+      // INTERACTION 01 - Cadastra o usuário - OK
+      await userController.createUserAccount(newUser);
 
       // OK: salvar a mensagem enviada no histórico de interações
       req.response = {
-        message: `Olá ${name}! Tudo bem com você? Eu sou a BRIA, a assistente inteligente da Borogoland e estou aqui para fazer seu processo de boas-vindas. Para começar, que tal me falar sobre você?`,
+        message: `Olá ${name}! Como vai? Eu sou a BRIA, sua assistente virtual na Borogoland. Estou aqui para garantir que sua jornada seja incrível e produtiva. Vamos iniciar agora o seu onboarding para que você possa tirar o máximo proveito dos recursos e atividades tenho a te oferecer. A seguir, escolha uma das opções ou me pergunte qualquer coisa.`,
         type: "text",
         flow: "01",
       };
       console.log("novo usuário criado");
       const { exists, userId } =
       await interactionController.findUserByWhatsappNumber(from);
+
+      // INTERACTION 01 - Salvar a chegada do usuário - OK
       await interactionController.saveUserInteraction(userId, "CHEGADA");
+      // INTERACTION 02 - Salvar a mensagem enviada pelo usuário - OK
+      await chatController.saveUserMessage(userId, msg_body);
 
 
       next();
     } else {
+
+      // FLOW 02 - USUÁRIO EXISTE
+
       console.log("usuário já existe");
-      await chatController.saveUserMessage(userId, msg_body);
-      console.log("mensagem salva no chat");
+      // Define quem é o usuário daqui pra frente - OK
       req.user = { userId };
 
+      // INTERACTION 01 - Salvar mensagem enviada pelo usuário - OK
+      await chatController.saveUserMessage(userId, msg_body);
+      console.log("mensagem salva no chat");
+
+
+      // INTERACTION 02 - TRATAR A MENSAGEM ENVIADA PELO USUÁRIO
+
+      // const activeCHat = await interactionController.analyzeInteractions(userId);
+
+
+
+
+      // FLOW 02.01 - É UMA CONVERSA NOVA
+      // Não tem histórico de conversa nas últimas 24h
+      // Caso negativo, enviar uma saudação e entender em qual fluxo de encaixa a pergunta
+
+
+      // FLOW 02.02 - É UMA CONVERSA EM ANDAMENTO
+      // Tem histórico de conversa nas últimas 24h
+      // Caso positivo, entender em qual fluxo de encaixa a pergunta
+
+        //  FLOW 02.02.01 - É UMA PERGUNTA
+    
+
+
+      
+      // TODO: definir as intents que serão tratadas
+
+      // TODO: definir os objetivos de conversão
 
       // const msg_type = req.whatsapp.msg_type;
 
@@ -53,11 +94,7 @@ const handleMessages = async (req, res, next) => {
       // TODO: verificar o tipo de informação
       
 
-      // // em caso de texto, verificar o contexto e dependendo enviar para a OpenAI
-      // // em caso de imagem, enviar para o Google Vision (por enquanto não temos essa funcionalidade, enviar reposta padrão)
-      // // em caso de audio, enviar para o Google Speech-to-Text (por enquanto não temos essa funcionalidade, enviar reposta padrão)
-      // // em caso de documento, enviar para o Google Document AI (por enquanto não temos essa funcionalidade, enviar reposta padrão)
-      // // em caso de resposta interativa, verificar o que fazer com a resposta
+
 
       // TODO: verificar se a mensagem é uma resposta a uma pergunta
 
@@ -71,7 +108,6 @@ const handleMessages = async (req, res, next) => {
       //     analyzeInteractionsReq,
       //     res
       // );
-
       next();
     }
   } catch (error) {
