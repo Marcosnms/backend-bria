@@ -51,7 +51,12 @@ const optionService = async (whatsappNumber, whatsapp_token, to) => {
               {
                 id: "central_servicos",
                 title: "💡Serviços Criativos ",
-                description: "Procurando um serviço criativo? Explore a Central de Serviços.",
+                description: "Procurando um profissional criativo? Explore a Central de Serviços.",
+              },
+              {
+                id: "wallet",
+                title: "🔐 Sua wallet",
+                description: "Acesse sua Wallet e veja seus Borogodós acumulados. ",
               },
  
             ],

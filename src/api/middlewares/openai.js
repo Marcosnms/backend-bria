@@ -5,14 +5,29 @@ const interactionController = require("../controllers/interactionController");
 const openaiMiddleware = async (req, res, next) => {
   console.log("chegou no openaiMiddleware");
 
-  // Caso a resposta já exista, não é necessário chamar a OpenAI novamente
   if (req.response) {
     console.log("resposta já existe");
     next();
 
-    // TODO: Definir contextos e objetivos de conversão (formas de perguntar para a AI)
   } else {
-    const { userId } = req.user;
+
+    // TODO: validar o tipo de FLOW da conversa
+    // Flow 01: onboarding
+    // Flow 02: consultas
+    // Flow 03: perfil
+    // Flow 04: cursos
+    // Flow 05: membros
+    // Flow 06: eventos
+    // Flow 07: serviços
+    // Flow 08: wallet
+    
+    const { userId, lastMesages } = req.user;
+
+    // Recuperar o histórico de chat
+    const chatHistory = await chatController.getChatHistory({ userId });
+
+    // Pega apenas as últimas 5 interações
+    const lastInteractions = chatHistory.slice(-5);
 
     if (req.whatsapp) {
       console.log("foi pra ai responder");
@@ -21,25 +36,36 @@ const openaiMiddleware = async (req, res, next) => {
       });
 
       try {
+        const messages = [
+          {
+            role: "system",
+            content: "Você é a assistente inteligente da Borogoland.",
+          },
+          ...lastInteractions.map(interaction => ({
+            role: interaction.sender === 'user' ? 'user' : 'assistant',
+            content: interaction.message,
+          })),
+          {
+            role: "user",
+            content: req.whatsapp.msg_body,
+          },
+        ];
+
         const completion = await api.chat.completions.create({
           model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system",
-              content: "Você é a assistente inteligente da Borogoland.",
-              // Adicione mais detalhes conforme necessário
-            },
-            {
-              role: "user",
-              content: req.whatsapp.msg_body,
-            },
-          ],
+          messages: messages,
         });
 
+        // Lógica para decidir se envia a resposta ou o menu de opções
+        const responseContent = completion.choices[0].message.content;
+
+        // Implementar lógica de análise de intenção aqui
+        // Exemplo: Se a intenção for clara, enviar resposta; se não, enviar menu
+
         req.response = {
-          message: completion.choices[0].message.content,
+          message: responseContent, // ou menu de opções
           type: "text",
-          flow: "03",
+          flow: "03", // Ajuste conforme necessário
         };
 
         console.log("Resposta:", req.response);
@@ -55,12 +81,12 @@ const openaiMiddleware = async (req, res, next) => {
 
     // Salva a resposta gerada
     console.log("salvando resposta");
-
     await chatController.saveReplyMessage(userId, req.response.message);
-    await interactionController.saveUserInteraction(userId, "RESPOSTA");
+    await interactionController.saveUserInteraction(userId, "RESPOSTA", false);
 
     next();
   }
 };
+
 
 module.exports = openaiMiddleware;

@@ -140,6 +140,18 @@ const whatsappMiddleware = (req, res, next) => {
               };
               next();
               break;
+
+            // TODO: 07. ÁREA DE MEMBROS
+            case "wallet":
+              // Envie uma imagem representando a área de membros
+              req.response = {
+                message:
+                  "Em breve, você pode ver seus Borogodós acumulados e como usá-los.",
+                type: "text",
+                flow: "02.07",
+              };
+              next();
+              break;
           }
         }
       }

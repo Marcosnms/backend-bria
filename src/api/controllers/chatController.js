@@ -31,24 +31,29 @@ const chatController = {
         }
     },
 
-    // Recuperar histórico de chat de um usuário
-    getChatHistory: async (req, res) => {
-        try {
-            const { userId } = req.params;
+  // Recuperar histórico de chat de um usuário
+  getChatHistory: async (req, res) => {
+    try {
+        const { userId } = req.params;
 
-            const chatHistory = await prisma.chat.findMany({
-                where: {
-                    userId  // Assumindo que você tem uma relação com o usuário
-                }
-            });
+        const chatHistory = await prisma.chat.findMany({
+            where: {
+                userId, // Assumindo que você tem uma relação com o usuário
+            },
+            take: 5, // Limita o resultado às últimas 5 conversas
+            orderBy: {
+                createdAt: 'desc' // Ordena as conversas pela data de criação, da mais recente para a mais antiga
+            },
+            select: {
+                message: true // Seleciona apenas a coluna 'message'
+            }
+        });
 
-            res.status(200).json({ chatHistory });
-        } catch (error) {
-            res.status(500).json({ error: "Erro ao recuperar o histórico de chat" });
-        }
-    },
-
-    // Outros métodos relacionados a chat podem ser adicionados aqui
+        return chatHistory;
+    } catch (error) {
+      console.log("Erro ao buscar histórico de chat:", error);
+    }
+  },
 };
 
 module.exports = chatController;

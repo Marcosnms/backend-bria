@@ -45,14 +45,6 @@ const interactionController = {
         // Nova conversa
         console.log("nova conversa");
 
-        await interactionController.saveUserInteraction(
-          userId,
-          "NOVA_CONVERSA"
-        );
-        // TODO: enviar listagem de opções para o usuário
-        // - enviar saudação
-        // - entender em qual fluxo de encaixa a pergunta
-
         return { conversa: "nova" };
       }
     } catch (error) {
@@ -61,7 +53,7 @@ const interactionController = {
   },
 
   // Armazenar uma interação
-  saveUserInteraction: async (userId, content) => {
+  saveUserInteraction: async (userId, content, createdByUser) => {
     try {
       if (!userId || !content) {
         throw "Dados insuficientes para salvar interação";
@@ -70,30 +62,13 @@ const interactionController = {
           data: {
             userId, // Assumindo que você tem uma relação com o usuário
             content, // Conteúdo da interação
-            createdByUser: true,
+            createdByUser, // Se a interação foi criada pelo usuário
           },
         });
       }
       console.log("interação salva");
     } catch (error) {
       console.log("Erro ao salvar interação:", error);
-    }
-  },
-
-  // Recuperar histórico de chat de um usuário
-  getChatHistory: async (req, res) => {
-    try {
-      const { userId } = req.params;
-
-      const chatHistory = await prisma.chat.findMany({
-        where: {
-          userId, // Assumindo que você tem uma relação com o usuário
-        },
-      });
-
-      res.status(200).json({ chatHistory });
-    } catch (error) {
-      res.status(500).json({ error: "Erro ao recuperar o histórico de chat" });
     }
   },
 };
