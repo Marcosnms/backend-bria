@@ -34,7 +34,7 @@ const chatController = {
   // Recuperar histórico de chat de um usuário
   getChatHistory: async (req, res) => {
     try {
-        const { userId } = req.params;
+        const userId = req.userId;
 
         const chatHistory = await prisma.chat.findMany({
             where: {

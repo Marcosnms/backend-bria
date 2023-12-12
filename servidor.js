@@ -52,7 +52,8 @@ app.post(
     if (req.whatsapp && req.response) {
       const replyMessage = req.response.message;
 
-        console.log("FLOW:", res.flow)
+        console.log("FLOW:", req.response.flow)
+
       if (req.response.type === "text") {
         // Envia uma mensagem de texto
         whatsappMiddleware.sendText(
@@ -63,17 +64,33 @@ app.post(
           res
         );
 
-        // se for o primeiro acesso
-
-        if (req.response.flow === "01") {
+        // onboarding
+        const flow = req.response.flow
+        if (flow === "01") {
           setTimeout(() => {
             optionsService(
               whatsappNumber,
               process.env.WHATSAPP_TOKEN,
-              from
+              from,
+              flow
+            );
+          }, 3000); // 000 milissegundos equivalem a 1 segundo
+        } else if (flow === "99") {
+          setTimeout(() => {
+            optionsService(
+              whatsappNumber,
+              process.env.WHATSAPP_TOKEN,
+              from,
+              flow
             );
           }, 3000); // 000 milissegundos equivalem a 1 segundo
         }
+
+        // se for uma consulta
+        // se for o perfil
+        // se for sobre cursos
+        // se for sobre eventos
+        // se for sobre membros
         
       }
     } else {
@@ -119,7 +136,8 @@ app.post('/optionmsg', (req, res) => {
   optionsService(
     req.body.whatsappNumber,
     req.body.whatsapp_token,
-    req.body.to)
+    req.body.to,
+    req.body.flow)
 
   console.log(req.body);
   res.status(200).send('ok');

@@ -26,7 +26,7 @@ const interactionController = {
       // Verificar se é uma nova conversa ou uma conversa ativa
       const activeChat = await prisma.chat.findMany({
         where: {
-          userId: user.id,
+          userId: req.userId,
           createdAt: {
             gte: new Date(new Date() - 24 * 60 * 60 * 1000),
           },
@@ -48,7 +48,7 @@ const interactionController = {
         return { conversa: "nova" };
       }
     } catch (error) {
-      res.status(500).json({ error: "Erro ao analisar interações" });
+      console.log("Erro ao analisar interações:", error);
     }
   },
 

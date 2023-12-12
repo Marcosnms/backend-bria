@@ -61,7 +61,7 @@ const whatsappMiddleware = (req, res, next) => {
           switch (selectedOptionId) {
             // TODO: 01. INFORMAÇÕES SOBRE O CURSO DE 2024
             case "upgrade_2024":
-              // Envie uma mensagem de texto sobre a Borogoland
+              // definir userFlow como "upgrade-24"
               req.response = {
                 message:
                   "Em breve, você saberá tudo sobre o curso de 2024. Por enquanto, me responda se quer que eu te avise quando estiver disponível.",
@@ -117,19 +117,23 @@ const whatsappMiddleware = (req, res, next) => {
               next();
               break;
 
-            // TODO: 05. ÁREA DE MEMBROS
+            // TODO: 05. PERFIL DO USUÁRIO
             case "user_profile":
-              // Envie uma imagem representando a área de membros
+
+              // definir userFlow como "onboarding"
+              // Iniciar módulo interview
+
+
               req.response = {
                 message:
-                  "Vamos nos conhecer melhor para que eu possa te ajudar? Conte-me um pouco sobre você, sua região, interesses e habilidades. Isso me ajudará a oferecer atividades e oportunidades relevantes para você.",
+                  "Ótimo! Vamos configurar seu perfil. Me responda por gentileza algumas perguntas para que eu possa te conhecer melhor e ser mais assertiva nas minhas repostas e comportamento.",
                 type: "text",
                 flow: "02.05",
               };
               next();
               break;
 
-            // TODO: 06. ÁREA DE MEMBROS
+            // TODO: 06. CENTRAL DE SERVIÇOS
             case "central_servicos":
               // Envie uma imagem representando a área de membros
               req.response = {
@@ -171,8 +175,6 @@ const whatsappMiddleware = (req, res, next) => {
 // _________________________________________________________________//
 
 // 01. FUNÇÃO PARA ENVIAR UMA MENSAGEM DE TEXTO - 0K
-
-// Função auxiliar para enviar resposta via WhatsApp
 whatsappMiddleware.sendText = (
   whatsappNumber,
   whatsapp_token,

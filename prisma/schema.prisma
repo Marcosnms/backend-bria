@@ -15,6 +15,7 @@ enum VerificationCodeType {
 model User {
   id             String        @id @default(uuid())
   name           String?
+  nickname       String?
   email          String?       @unique
   whatsappNumber String        @unique
   createdAt      DateTime      @default(now())
@@ -23,6 +24,7 @@ model User {
   verifiedEmail  Boolean       @default(false)
   member         Boolean       @default(false)
   walletId       String?       @unique
+  activeFlow     String?       @default("onboarding")
   chats          Chat[] 
   interactions   Interaction[]
   userProfile    UserProfile[]
@@ -65,8 +67,10 @@ model UserProfile {
   profilePictureUrl         String?
   dateOfBirth               DateTime?
   gender                    String?
-  location                  String?
-  language                  String?
+  country                   String?
+  state                     String?
+  city                      String?
+  language                  String?  @default("pt-br")
   interests                 String?  @db.VarChar(900)
   skills                    String?  @db.VarChar(900)
   educationLevel            String?
@@ -75,12 +79,8 @@ model UserProfile {
   goals                     String?
   lookingFor                String?
   offering                  String?
-  membershipStatus          String?
-  joinDate                  DateTime @default(now())
-  lastActiveDate            DateTime @updatedAt
-  preferredCommunicationChannel String?
   accountStatus             String?
-  phoneNumber               String?
+  membershipStatus          String?
   bio                       String? @db.VarChar(2000)
   website                   String?
   socialMediaLinks          Json?
