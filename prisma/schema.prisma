@@ -25,11 +25,12 @@ model User {
   member         Boolean       @default(false)
   walletId       String?       @unique
   activeFlow     String?       @default("onboarding")
-  chats          Chat[] 
+  chats          Chat[]
   interactions   Interaction[]
   userProfile    UserProfile[]
   services       Service[]
   events         Event[]
+  Participant    Participant[]
 
   @@map("users")
 }
@@ -60,95 +61,95 @@ model Interaction {
 }
 
 model UserProfile {
-  id                        Int      @id @default(autoincrement())
-  userId                    String   @unique
-  user                      User     @relation(fields: [userId], references: [id])
-  fullName                  String?
-  profilePictureUrl         String?
-  dateOfBirth               DateTime?
-  gender                    String?
-  country                   String?
-  state                     String?
-  city                      String?
-  language                  String?  @default("pt-br")
-  interests                 String?  @db.VarChar(900)
-  skills                    String?  @db.VarChar(900)
-  educationLevel            String?
-  professionalBackground    String?  @db.VarChar(2000)
-  industry                  String?
-  goals                     String?
-  lookingFor                String?
-  offering                  String?
-  accountStatus             String?
-  membershipStatus          String?
-  bio                       String? @db.VarChar(2000)
-  website                   String?
-  socialMediaLinks          Json?
-  availability              String?
-  timeCommitment            String?
-  volunteerInterests        String?
-  certifications            String?
-  awards                    String?
-  publications              Json?
-  presentations             Json?
-  coursesCompleted          Json?
-  membershipLevel           String?
-  extraPackages             Json?
-  referralCode              String?
-  referredBy                String?
-  privacySettings           Json?
-  customFields              Json?
+  id                     Int       @id @default(autoincrement())
+  userId                 String    @unique
+  user                   User      @relation(fields: [userId], references: [id])
+  fullName               String?
+  profilePictureUrl      String?
+  dateOfBirth            DateTime?
+  gender                 String?
+  country                String?
+  state                  String?
+  city                   String?
+  language               String?   @default("pt-br")
+  interests              String?   @db.VarChar(900)
+  skills                 String?   @db.VarChar(900)
+  educationLevel         String?
+  professionalBackground String?   @db.VarChar(2000)
+  industry               String?
+  goals                  String?
+  lookingFor             String?
+  offering               String?
+  accountStatus          String?
+  membershipStatus       String?
+  bio                    String?   @db.VarChar(2000)
+  website                String?
+  socialMediaLinks       Json?
+  availability           String?
+  timeCommitment         String?
+  volunteerInterests     String?
+  certifications         String?
+  awards                 String?
+  publications           Json?
+  presentations          Json?
+  coursesCompleted       Json?
+  membershipLevel        String?
+  extraPackages          Json?
+  referralCode           String?
+  referredBy             String?
+  privacySettings        Json?
+  customFields           Json?
 
   @@map("userProfile")
 }
 
 model Service {
-  id              Int      @id @default(autoincrement())
-  providerId      String
-  provider           User  @relation(fields: [providerId], references: [id])
-  title           String  @db.VarChar(200)
-  description     String  @db.VarChar(900)
-  details         String  @db.VarChar(2000)
-  category        String
-  price           Float
-  currency        String
-  availability    String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  isActive        Boolean  @default(true)
-  tags            String?  // Lista separada por vírgulas de palavras-chave ou tags
+  id           Int      @id @default(autoincrement())
+  providerId   String
+  provider     User     @relation(fields: [providerId], references: [id])
+  title        String   @db.VarChar(200)
+  description  String   @db.VarChar(900)
+  details      String   @db.VarChar(2000)
+  category     String
+  price        Float
+  currency     String
+  availability String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  isActive     Boolean  @default(true)
+  tags         String? // Lista separada por vírgulas de palavras-chave ou tags
 
   @@map("services")
 }
 
 model Event {
-  id            Int      @id @default(autoincrement())
-  title         String   @db.VarChar(100)
-  description   String   @db.VarChar(2000)
-  location      String
-  startTime     DateTime
-  endTime       DateTime
-  organizerId   String
-  organizer     User     @relation(fields: [organizerId], references: [id])
-  category      String
-  isVirtual     Boolean
+  id              Int           @id @default(autoincrement())
+  title           String        @db.VarChar(100)
+  description     String        @db.VarChar(2000)
+  location        String
+  startTime       DateTime
+  endTime         DateTime
+  organizerId     String
+  organizer       User          @relation(fields: [organizerId], references: [id])
+  category        String
+  isVirtual       Boolean
   maxParticipants Int?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  isActive      Boolean  @default(true)
-  participants  Participant[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  isActive        Boolean       @default(true)
+  participants    Participant[]
 
   @@map("events")
 }
 
 model Participant {
-  id            Int      @id @default(autoincrement())
-  userId        String
-  user          User     @relation(fields: [userId], references: [id])
-  eventId       Int
-  event         Event    @relation(fields: [eventId], references: [id])
-  registeredAt  DateTime @default(now())
-  status        String   // e.g., 'confirmed', 'waiting', 'cancelled'
+  id           Int      @id @default(autoincrement())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  eventId      Int
+  event        Event    @relation(fields: [eventId], references: [id])
+  registeredAt DateTime @default(now())
+  status       String // e.g., 'confirmed', 'waiting', 'cancelled'
 
   @@map("participants")
 }
