@@ -13,24 +13,24 @@ enum VerificationCodeType {
 }
 
 model User {
-  id             String        @id @default(uuid())
-  name           String?
-  nickname       String?
-  email          String?       @unique
-  whatsappNumber String        @unique
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  privateKey     String?       @db.VarChar(900)
-  verifiedEmail  Boolean       @default(false)
-  member         Boolean       @default(false)
-  walletId       String?       @unique
-  activeFlow     String?       @default("onboarding")
-  chats          Chat[]
-  interactions   Interaction[]
-  userProfile    UserProfile[]
-  services       Service[]
-  events         Event[]
-  Participant    Participant[]
+  id              String            @id @default(uuid())
+  name            String
+  email           String?           @unique
+  whatsappNumber  String            @unique
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  privateKey      String?           @db.VarChar(900)
+  verifiedEmail   Boolean           @default(false)
+  member          Boolean           @default(false)
+  walletId        String?           @unique
+  activeFlow      String?           @default("onboarding")
+  chats           Chat[]
+  interactions    Interaction[]
+  basicProfile    BasicProfile[]
+  advancedProfile AdvancedProfile[]
+  services        Service[]
+  events          Event[]
+  Participant     Participant[]
 
   @@map("users")
 }
@@ -60,21 +60,32 @@ model Interaction {
   @@map("interactions")
 }
 
-model UserProfile {
+model BasicProfile {
+  id             Int     @id @default(autoincrement())
+  userId         String  @unique
+  user           User    @relation(fields: [userId], references: [id])
+  nickname       String?
+  gender         String?
+  country        String?
+  state          String?
+  city           String?
+  age            String?
+  educationLevel String?
+  professional   String?
+
+  @@map("basicProfile")
+}
+
+model AdvancedProfile {
   id                     Int       @id @default(autoincrement())
   userId                 String    @unique
   user                   User      @relation(fields: [userId], references: [id])
   fullName               String?
   profilePictureUrl      String?
   dateOfBirth            DateTime?
-  gender                 String?
-  country                String?
-  state                  String?
-  city                   String?
   language               String?   @default("pt-br")
   interests              String?   @db.VarChar(900)
   skills                 String?   @db.VarChar(900)
-  educationLevel         String?
   professionalBackground String?   @db.VarChar(2000)
   industry               String?
   goals                  String?
@@ -100,7 +111,7 @@ model UserProfile {
   privacySettings        Json?
   customFields           Json?
 
-  @@map("userProfile")
+  @@map("advancedProfile")
 }
 
 model Service {

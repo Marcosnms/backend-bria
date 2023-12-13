@@ -58,11 +58,27 @@ const handleMessages = async (req, res, next) => {
       // TRATAR A MENSAGEM ENVIADA PELO USUÁRIO
 
       // verifica o user activeflow
-      // const activeFlow = await interactionController.getActiveFlow(userId);
+      const activeFlow = await interactionController.getActiveFlow(userId);
+      req.activeFlow = activeFlow;
+      console.log("activeFlow:", activeFlow);
 
       // se for === "01" - onboarding
+      if (activeFlow === "onboarding") {
+      
+        // identifica quais campos já foram preenchidos
+        // verifica qual a resposta do usuário
+        // salva a resposta do usuário na tabela userProfile
+        // envia uma pergunta para coletar outra informação que falta do fluxo básico
+        // caso as infos básicas estiverem preenchidas, envia uma mensagem de boas vindas e o menu principal
+        // caso as o usuário queira adicionar mais informações, realizar lista de perguntas avançadas.
 
-      next();
+        next();
+      } else {
+        next();
+       }
+
+
+
     }
   } catch (error) {
     console.error("Erro ao processar webhook:", error);

@@ -6,7 +6,7 @@ const whatsappMiddleware = (req, res, next) => {
 
   // console.log("req.body:", JSON.stringify(req.body, null, 2));
 
-  //__________________________parte receptora________________________//
+//__________________________parte receptora________________________//
   if (req.body.object) {
     if (
       req.body.entry &&
@@ -38,9 +38,11 @@ const whatsappMiddleware = (req, res, next) => {
         console.log("texto:", req.whatsapp);
         next(); // envia para a próxima etapa - handleMessages
 
-        //______________________ configuração para respostas interativas _______________________//
 
-        // 02. CASO A MENSAGEM SEJA UMA RESPOTA A UMA MENSAGEM INTERATIVA
+
+    //______________________ configuração para respostas interativas _______________________//
+
+        // 02. CASO A MENSAGEM SEJA UMA RESPOSTA A UMA MENSAGEM INTERATIVA
       } else if (msg_type === "interactive") {
         console.log("mensagem interativa");
         const messageData = req.body.entry[0].changes[0].value.messages[0];
@@ -120,9 +122,7 @@ const whatsappMiddleware = (req, res, next) => {
             // TODO: 05. PERFIL DO USUÁRIO
             case "user_profile":
 
-              // definir userFlow como "onboarding"
-              // Iniciar módulo interview
-
+              // definir userFlow como "onboarding" - OK (automático)
 
               req.response = {
                 message:
@@ -130,6 +130,8 @@ const whatsappMiddleware = (req, res, next) => {
                 type: "text",
                 flow: "02.05",
               };
+
+
               next();
               break;
 

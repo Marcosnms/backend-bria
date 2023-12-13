@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const interactionController = {
-  // OK Função para encontrar um usuário pelo número do WhatsApp
+  // Função para encontrar um usuário pelo número do WhatsApp - ok
   findUserByWhatsappNumber: async (whatsappNumber) => {
     try {
       const user = await prisma.user.findUnique({
@@ -71,6 +71,26 @@ const interactionController = {
       console.log("Erro ao salvar interação:", error);
     }
   },
+
+  // Verificar o fluxo ativo de um usuário
+  getActiveFlow: async (userId) => {
+    try {
+      // Exemplo: assumindo que existe um campo 'activeFlow' no modelo 'User'
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { activeFlow: true }, // Selecionando apenas o campo 'activeFlow'
+      });
+
+      if (!user) {
+        throw "Usuário não encontrado";
+      }
+
+      return user.activeFlow; // Retornando o fluxo ativo do usuário
+    } catch (error) {
+      console.error("Erro ao obter o fluxo ativo do usuário:", error);
+      throw error;
+    }
+  }
 };
 
 module.exports = interactionController;
