@@ -24,6 +24,7 @@ model User {
   member          Boolean           @default(false)
   walletId        String?           @unique
   activeFlow      String?           @default("onboarding")
+  openFlow        String?
   chats           Chat[]
   interactions    Interaction[]
   basicProfile    BasicProfile[]
@@ -71,7 +72,7 @@ model BasicProfile {
   city           String?
   age            String?
   educationLevel String?
-  professional   String?
+  profession     String?
 
   @@map("basicProfile")
 }

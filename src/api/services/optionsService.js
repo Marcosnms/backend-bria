@@ -3,7 +3,7 @@ const axios = require("axios");
 const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
   // caso onboarding
 
-  if (flow === "01") {
+  if (flow === "chegada") {
     try {
       console.log("chegou no optionService");
       console.log(whatsappNumber, whatsapp_token, to);
@@ -18,7 +18,7 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
           text: "Escolha a opção abaixo e deixe a magia acontecer! 🌟",
         },
         footer: {
-          text: "BRIA, a Inteligência Coletiva da Borogoland",
+          text: "BRIA, a Inteligência Coletiva do Borogodó",
         },
         action: {
           button: "escolher",
@@ -27,10 +27,10 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
               title: "Listagem de Serviços",
               rows: [
                 {
-                  id: "user_profile",
-                  title: "👤 Seu perfil",
+                  id: "onboarding",
+                  title: "👤 Novo perfil",
                   description:
-                    "Configure seus objetivos, suas preferências e defina o SEU Borogodó!",
+                    "Configure seus dados, suas preferências e defina o SEU Borogodó!",
                 },
               ],
             },
@@ -76,7 +76,7 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
           text: "Escolha uma opção abaixo e deixe a magia acontecer! 🌟",
         },
         footer: {
-          text: "BRIA, a Inteligência Coletiva da Borogoland",
+          text: "BRIA, a Inteligência Coletiva do Borogodó",
         },
         action: {
           button: "escolher",

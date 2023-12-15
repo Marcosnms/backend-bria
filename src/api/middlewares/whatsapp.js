@@ -61,31 +61,45 @@ const whatsappMiddleware = (req, res, next) => {
 
           // opções de resposta disponíveis
           switch (selectedOptionId) {
-            // TODO: 01. INFORMAÇÕES SOBRE O CURSO DE 2024
+
+            
+            // 01. ONBOARDING
+            case "onboarding":
+              // definir userFlow como "onboarding" - OK (automático)
+              req.response = {
+                message:
+                  "Ótimo! Vamos configurar seu perfil. Me responda por gentileza algumas perguntas para que eu possa te conhecer melhor e ser mais assertiva nas minhas repostas e comportamento.",
+                type: "text",
+                flow: "onboarding",
+              };
+              next();
+              break;
+
+            // TODO: 02. INFORMAÇÕES SOBRE O CURSO DE 2024
             case "upgrade_2024":
               // definir userFlow como "upgrade-24"
               req.response = {
                 message:
                   "Em breve, você saberá tudo sobre o curso de 2024. Por enquanto, me responda se quer que eu te avise quando estiver disponível.",
                 type: "text",
-                flow: "02.01",
+                flow: "upgrade",
               };
               next();
               break;
 
-            // TODO: 02. INFORMAÇÕES SOBRE A BOROGOLAND
+            // TODO: 03. INFORMAÇÕES SOBRE A BOROGOLAND
             case "borogoland_info":
               // Envie uma mensagem de texto sobre a Borogoland
               req.response = {
                 message:
                   "Que bom que você quer saber mais sobre a Borogoland! A Borogoland é uma DAO que tem como objetivo ajudar as pessoas a alcançar a sustentabilidade criativa, social e financeira.",
                 type: "text",
-                flow: "02.02",
+                flow: "info",
               };
               next();
               break;
 
-            // TODO: 03. LINKS ÚTEIS
+            // TODO: 04. LINKS ÚTEIS
             case "useful_links":
               // Envie uma lista com links úteis
               req.response = {
@@ -101,60 +115,58 @@ const whatsappMiddleware = (req, res, next) => {
                   `- Borogoteca: https://www.borogoteca.com\n\n` +
                   `- UnescoSost: https://www.unescosost.com.br`,
                 type: "text",
-                flow: "02.03",
+                flow: "links",
               };
 
               next();
               break;
 
-            // TODO: 04. ÁREA DE MEMBROS
+            // TODO: 05. ÁREA DE MEMBROS
             case "members_area":
               // Envie uma imagem representando a área de membros
               req.response = {
                 message:
                   "Em breve você saberá tudo para ser um membro! Olhe pelo lado positivo e veja que sua mensagem foi escolhida corretamente. Me pergunte alguma coisa sobre a Borogoland e eu te responderei.",
                 type: "text",
-                flow: "02.04",
+                flow: "members",
               };
               next();
               break;
 
-            // TODO: 05. PERFIL DO USUÁRIO
+            // TODO: 06. PERFIL DO USUÁRIO
             case "user_profile":
-
-              // definir userFlow como "onboarding" - OK (automático)
 
               req.response = {
                 message:
-                  "Ótimo! Vamos configurar seu perfil. Me responda por gentileza algumas perguntas para que eu possa te conhecer melhor e ser mais assertiva nas minhas repostas e comportamento.",
+                  "Ótimo! Vamos atualizar o seu perfil. Me fale mais sobre você! ",
                 type: "text",
-                flow: "02.05",
+                flow: "profile",
               };
 
 
               next();
               break;
 
-            // TODO: 06. CENTRAL DE SERVIÇOS
+            // TODO: 07. CENTRAL DE SERVIÇOS
             case "central_servicos":
               // Envie uma imagem representando a área de membros
               req.response = {
                 message:
                   "Procurando um serviço criativo para impulsionar o seu negócio. Confira nossa lista de serviços disponíveis",
                 type: "text",
-                flow: "02.06",
+                flow: "servicos",
               };
               next();
               break;
 
-            // TODO: 07. ÁREA DE MEMBROS
+            // TODO: 08. ÁREA DE MEMBROS
             case "wallet":
               // Envie uma imagem representando a área de membros
               req.response = {
                 message:
                   "Em breve, você pode ver seus Borogodós acumulados e como usá-los.",
                 type: "text",
-                flow: "02.07",
+                flow: "wallet",
               };
               next();
               break;

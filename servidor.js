@@ -66,7 +66,7 @@ app.post(
 
         // onboarding
         const flow = req.response.flow
-        if (flow === "01") {
+        if (flow === "chegada") {
           setTimeout(() => {
             optionsService(
               whatsappNumber,
@@ -74,8 +74,12 @@ app.post(
               from,
               flow
             );
-          }, 3000); // 000 milissegundos equivalem a 1 segundo
-        } else if (flow === "99") {
+          }, 4000); // 000 milissegundos equivalem a 1 segundo
+        }
+        
+        // TODO: montar as funções para os outros flows
+
+        else if (flow === "menu") {
           setTimeout(() => {
             optionsService(
               whatsappNumber,
