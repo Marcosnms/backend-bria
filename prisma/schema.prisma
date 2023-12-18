@@ -73,6 +73,7 @@ model BasicProfile {
   age            String?
   educationLevel String?
   profession     String?
+  segment        String?
 
   @@map("basicProfile")
 }

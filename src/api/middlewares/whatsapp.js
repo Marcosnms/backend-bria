@@ -6,7 +6,7 @@ const whatsappMiddleware = (req, res, next) => {
 
   // console.log("req.body:", JSON.stringify(req.body, null, 2));
 
-//__________________________parte receptora________________________//
+  //__________________________parte receptora________________________//
   if (req.body.object) {
     if (
       req.body.entry &&
@@ -38,9 +38,7 @@ const whatsappMiddleware = (req, res, next) => {
         console.log("texto:", req.whatsapp);
         next(); // envia para a próxima etapa - handleMessages
 
-
-
-    //______________________ configuração para respostas interativas _______________________//
+        //______________________ configuração para respostas interativas _______________________//
 
         // 02. CASO A MENSAGEM SEJA UMA RESPOSTA A UMA MENSAGEM INTERATIVA
       } else if (msg_type === "interactive") {
@@ -61,8 +59,6 @@ const whatsappMiddleware = (req, res, next) => {
 
           // opções de resposta disponíveis
           switch (selectedOptionId) {
-
-            
             // 01. ONBOARDING
             case "onboarding":
               // definir userFlow como "onboarding" - OK (automático)
@@ -76,23 +72,23 @@ const whatsappMiddleware = (req, res, next) => {
               break;
 
             // TODO: 02. INFORMAÇÕES SOBRE O CURSO DE 2024
-            case "upgrade_2024":
+            case "upgrade":
               // definir userFlow como "upgrade-24"
               req.response = {
                 message:
-                  "Em breve, você saberá tudo sobre o curso de 2024. Por enquanto, me responda se quer que eu te avise quando estiver disponível.",
-                type: "text",
+                "Os melhores vídeos selecionados para você direto da Borogoteca.\n\n" +
+                "Equanto a integração não vem, acesse o link: https://transcriativa.cademi.com.br/ e saiba mais!",                type: "text",
                 flow: "upgrade",
               };
               next();
               break;
 
             // TODO: 03. INFORMAÇÕES SOBRE A BOROGOLAND
-            case "borogoland_info":
+            case "info":
               // Envie uma mensagem de texto sobre a Borogoland
               req.response = {
                 message:
-                  "Que bom que você quer saber mais sobre a Borogoland! A Borogoland é uma DAO que tem como objetivo ajudar as pessoas a alcançar a sustentabilidade criativa, social e financeira.",
+                  "Que bom que você quer saber mais sobre a Borogoland!\n\n A Borogoland é a terra virtual do Borogodó que tem como objetivo ajudar as pessoas a alcançar a sustentabilidade criativa, social e financeira.\n\n  Em breve, você vai receber notícias de como participar.",
                 type: "text",
                 flow: "info",
               };
@@ -100,11 +96,11 @@ const whatsappMiddleware = (req, res, next) => {
               break;
 
             // TODO: 04. LINKS ÚTEIS
-            case "useful_links":
+            case "links":
               // Envie uma lista com links úteis
               req.response = {
                 message:
-                  `Aqui estão alguns links úteis para você:\n\n` +
+                  `Aqui estão alguns links úteis para você começar a sua Jornada:\n\n` +
                   `- Instagram: https://www.instagram.com/borogoland\n\n` +
                   `- Tiktok: https://www.tiktok.com/@borogoland\n\n` +
                   `- LinkedIn: https://www.linkedin.com/company/borogoland\n\n` +
@@ -113,7 +109,8 @@ const whatsappMiddleware = (req, res, next) => {
                   `- Borogoland: https://www.borogoland.com\n\n` +
                   `- Borogodometro: https://www.borogodometro.com\n\n` +
                   `- Borogoteca: https://www.borogoteca.com\n\n` +
-                  `- UnescoSost: https://www.unescosost.com.br`,
+                  `- UnescoSost: https://www.unescosost.com.br\n\n` +
+                  '- Transcriativa: https://www.transcriativa.com.br',
                 type: "text",
                 flow: "links",
               };
@@ -122,11 +119,11 @@ const whatsappMiddleware = (req, res, next) => {
               break;
 
             // TODO: 05. ÁREA DE MEMBROS
-            case "members_area":
+            case "members":
               // Envie uma imagem representando a área de membros
               req.response = {
                 message:
-                  "Em breve você saberá tudo para ser um membro! Olhe pelo lado positivo e veja que sua mensagem foi escolhida corretamente. Me pergunte alguma coisa sobre a Borogoland e eu te responderei.",
+                  "Em breve você saberá tudo para ser um membro! Caso queira ser avisado sobre a disponibilidade e benefícios de ser um membro, escreva:\n\neu quero",
                 type: "text",
                 flow: "members",
               };
@@ -134,39 +131,51 @@ const whatsappMiddleware = (req, res, next) => {
               break;
 
             // TODO: 06. PERFIL DO USUÁRIO
-            case "user_profile":
-
+            case "profile":
               req.response = {
                 message:
-                  "Ótimo! Vamos atualizar o seu perfil. Me fale mais sobre você! ",
+                  "Em breve, vamos melhorar seu perfil. Por enquanto, me pergunte alguma coisa sobre você e eu te responderei. ",
                 type: "text",
                 flow: "profile",
               };
-
 
               next();
               break;
 
             // TODO: 07. CENTRAL DE SERVIÇOS
-            case "central_servicos":
+            case "servicos":
               // Envie uma imagem representando a área de membros
               req.response = {
                 message:
-                  "Procurando um serviço criativo para impulsionar o seu negócio. Confira nossa lista de serviços disponíveis",
+                  "Em breve, oportunidades para você ganhar dinheiro com seu Borogodó!",
                 type: "text",
                 flow: "servicos",
               };
               next();
               break;
 
-            // TODO: 08. ÁREA DE MEMBROS
+            // TODO: 08. CARTEIRA
             case "wallet":
               // Envie uma imagem representando a área de membros
               req.response = {
                 message:
-                  "Em breve, você pode ver seus Borogodós acumulados e como usá-los.",
+                  "Em breve, você poderá ver seus BRGDs acumulados e como usá-los na Borogoland. Tá vindo coisa muito legal por aí! 💫",
                 type: "text",
                 flow: "wallet",
+              };
+              next();
+              break;
+
+            // TODO: 09. BOROGODOMETRO
+            case "borogodometro":
+              // Envie uma imagem representando a área de membros
+              req.response = {
+                message:
+                  "Descubra o nível do seu Borogodó!\n\n" +
+                  "Acesse o link: https://www.borogodometro.com.br e faça seu teste agora mesmo. É grátis, facil e rápido!\n\n" +
+                  "Em breve vai ter um Borogodometro aqui também!" ,
+                type: "text",
+                flow: "borogodometro",
               };
               next();
               break;

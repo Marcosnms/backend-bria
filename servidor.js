@@ -18,6 +18,7 @@ const handleMessages = require("./src/api/middlewares/handleMessages");
 // Importação de Serviços
 const messageService = require("./src/api/services/messageService");
 const optionsService = require("./src/api/services/optionsService");
+const sendTermsAndPolicy = require("./src/api/services/compliance");
 
 // Configuração do dotenv
 dotenv.config();
@@ -121,6 +122,18 @@ app.get("/webhook", (req, res) => {
   }
 });
 
+app.post('/compliance', (req, res) => {
+  console.log('chegou no compliance');
+
+  sendTermsAndPolicy(
+    req.body.whatsappNumber,
+    req.body.whatsapp_token,
+    req.body.to,) 
+
+  console.log(req.body);
+  res.status(200).send('ok');
+});
+
 app.post('/webmsg', (req, res) => {
   console.log('chegou no webmsgevent');
 
@@ -133,6 +146,7 @@ app.post('/webmsg', (req, res) => {
   console.log(req.body);
   res.status(200).send('ok');
 });
+
 
 app.post('/optionmsg', (req, res) => {
   console.log('chegou no webmsgevent');

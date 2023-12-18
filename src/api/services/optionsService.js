@@ -12,23 +12,23 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
         type: "list",
         header: {
           type: "text",
-          text: "☰  Vamos começar",
+          text: "😀 vamos começar",
         },
         body: {
           text: "Escolha a opção abaixo e deixe a magia acontecer! 🌟",
         },
         footer: {
-          text: "BRIA, a Inteligência Coletiva do Borogodó",
+          text: "BRIA, a Inteligência Coletiva da Borogoland",
         },
         action: {
-          button: "escolher",
+          button: "escolha",
           sections: [
             {
               title: "Listagem de Serviços",
               rows: [
                 {
                   id: "onboarding",
-                  title: "👤 Novo perfil",
+                  title: "👤 Novo Perfil",
                   description:
                     "Configure seus dados, suas preferências e defina o SEU Borogodó!",
                 },
@@ -76,7 +76,7 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
           text: "Escolha uma opção abaixo e deixe a magia acontecer! 🌟",
         },
         footer: {
-          text: "BRIA, a Inteligência Coletiva do Borogodó",
+          text: "BRIA, a Inteligência Coletiva da Borogoland",
         },
         action: {
           button: "escolher",
@@ -85,45 +85,51 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
               title: "Listagem de Serviços",
               rows: [
                 {
-                  id: "user_profile",
-                  title: "👤 Seu perfil",
+                  id: "profile",
+                  title: "👤 Seu Perfil",
                   description:
-                    "Configure seus objetivos, suas preferências e defina o SEU Borogodó!",
+                    "qual o seu Borogodó",
                 },
                 {
-                  id: "upgrade_2024",
-                  title: "🚀 Upgrade KIT 2024",
+                  id: "borogodometro",
+                  title: "🌟 Borogodômetro",
                   description:
-                    "Tudo o que você precisa saber em tecnologia para 2024",
+                    "qual o nível do seu Borogodó",
                 },
                 {
-                  id: "useful_links",
-                  title: "🔗 Links úteis",
-                  description: "Acesse recursos escolhidos a dedo para você!",
+                  id: "upgrade",
+                  title: "🚀 Borogoteca",
+                  description:
+                    "aumente o poder do seu Borogodó",
                 },
                 {
-                  id: "members_area",
+                  id: "links",
+                  title: "🔗 Começe a Jornada",
+                  description: "acesse recursos que vão te ajudar a expandir seu Borogodó",
+                },
+                {
+                  id: "members",
                   title: "👥 Área de Membros",
                   description:
-                    "Eventos, Mentorias, Notificações, Ferramentas, Suporte e Acompanhamento.",
+                    "criando conexões e oportunidades para você",
                 },
                 {
-                  id: "borogoland_info",
-                  title: "🌍 Sobre a Borogoland",
-                  description:
-                    "Descubra mais sobre nosso funcionamento e como participar.",
-                },
-                {
-                  id: "central_servicos",
+                  id: "servicos",
                   title: "💡Serviços Criativos ",
                   description:
-                    "Procurando um profissional criativo? Explore a Central de Serviços.",
+                    "oportunidades de jobs",
                 },
                 {
                   id: "wallet",
-                  title: "🔐 Sua wallet",
+                  title: "🤑 Sua Wallet",
                   description:
-                    "Acesse sua Wallet e veja seus Borogodós acumulados. ",
+                    "acesse sua carteira virtual e veja seus BRGDs acumulados",
+                },
+                {
+                  id: "info",
+                  title: "🌍 Sobre a Borogoland",
+                  description:
+                    "informações sobre a terra do Borogodó",
                 },
               ],
             },

@@ -30,7 +30,7 @@ const handleMessages = async (req, res, next) => {
 
       // OK: salvar a mensagem enviada no histórico de interações
       req.response = {
-        message: `Olá ${name}! Como vai? Eu sou a BRIA, sua assistente virtual na Borogoland. Estou aqui para garantir que sua jornada seja incrível e produtiva. Vamos iniciar agora o seu onboarding para que você possa tirar o máximo proveito dos recursos e atividades tenho a te oferecer. A seguir, selecione a opção para configurar seu perfil.`,
+        message: `👋 Olá ${name}! Bem vindo(a) Borogoland! Eu sou a BRIA, sua assistente virtual e estou aqui para garantir que sua jornada seja incrível!\n\nBora começar contando sobre você e o seu borogodó lá no seu perfil?\nBasta escolher a opção "👤 Seu perfil" e adicionar as informações.😉`,
         type: "text",
         flow: "chegada",
       };
@@ -95,21 +95,27 @@ const handleMessages = async (req, res, next) => {
           console.log("Fluxo 01.05 tratado com sucesso.");
           break;
         case "01.06":
-          field = "country";
+          field = "segment";
           await userController.saveBasicProfileData(userId, field, msg_body);
           console.log("Fluxo 01.06 tratado com sucesso.");
           break;
         case "01.07":
-          field = "state";
+          field = "country";
           await userController.saveBasicProfileData(userId, field, msg_body);
           console.log("Fluxo 01.07 tratado com sucesso.");
           break;
         case "01.08":
-          field = "city";
+          field = "state";
           await userController.saveBasicProfileData(userId, field, msg_body);
           console.log("Fluxo 01.08 tratado com sucesso.");
+          break;
+        case "01.09":
+          field = "city";
+          await userController.saveBasicProfileData(userId, field, msg_body);
+          console.log("Fluxo 01.09 tratado com sucesso.");
           req.response = {
-            message: "Ótimo! Seu perfil foi criado com sucesso! Agora, escolha uma das opções disponívels para continuarmos a nossa conversa.",
+            message:
+              "Ótimo! Seu perfil foi criado com sucesso! Agora, escolha uma das opções disponívels para continuarmos a nossa conversa.\n\nVocê pode chamar o menu de funcionalidades a qualquer momento digitando a palavra MENU.",
             type: "text",
             flow: "menu",
           };
@@ -123,6 +129,19 @@ const handleMessages = async (req, res, next) => {
       req.activeFlow = activeFlow;
       console.log("activeFlow:", activeFlow);
 
+      // verifica se o usário solicitou o menu
+
+      if (req.whatsapp.msg_body.toLowerCase() === "menu".toLowerCase()) {
+        console.log("usuário solicitou o menu");
+        req.response = {
+          message:
+            "Entendido! Vou te enviar o menu de funcionalidades disponíveis agora mesmo! 😎",
+          type: "text",
+          flow: "menu",
+        };
+        next();
+      }
+
       // se for === onboarding
       if (activeFlow === "onboarding") {
         // qual o score do BasicProfile
@@ -132,7 +151,7 @@ const handleMessages = async (req, res, next) => {
         console.log("scoreBasicProfile:", scoreBasicProfile);
         // tratamento do fluxo básico de PERFIL
         // TODO: adicionar response_validation com OpenAi. Caso a resposta não seja válida, enviar uma mensagem de erro e pedir para repetir
-        if (scoreBasicProfile < 8) {
+        if (scoreBasicProfile < 9) {
           const nextQuestion = await userController.getNextBasicProfileQuestion(
             userId
           );
@@ -141,7 +160,8 @@ const handleMessages = async (req, res, next) => {
           switch (nextQuestion) {
             case "nickname":
               req.response = {
-                message: "Ótimo! Vamos começar. Uma grande alegria em ter você aqui. Como você gostaria que eu te chamasse?",
+                message:
+                  "Ótimo! Uma grande alegria em ter você aqui.🥳\n\nVamos configurar o seu perfil. Prometo que vai ser rapidinho. Como você gostaria que eu te chamasse?",
                 type: "text",
                 flow: "onboarding",
               };
@@ -152,7 +172,7 @@ const handleMessages = async (req, res, next) => {
 
             case "gender":
               req.response = {
-                message: `Uau... que nome bonito ${msg_body}! Um grande prazer em te conhecer. E qual o pronome de tratamento que você gostaria que eu utilize em nossas conversas (Masculino, Feminino, Outros)?`,
+                message: `🤓 Uau... que nome bonito ${msg_body}! Um grande prazer em te conhecer.\n\nE qual o pronome de tratamento que você gostaria que eu utilize em nossas conversas (Masculino, Feminino, Outros)?`,
                 type: "text",
                 flow: "onboarding",
               };
@@ -163,7 +183,8 @@ const handleMessages = async (req, res, next) => {
 
             case "age":
               req.response = {
-                message: "Entendi, combinado! Quantas voltas ao redor do sol você já completou (ou seja, qual é a sua idade)? Pode deixar que fica entre a gente :)",
+                message:
+                  "Entendi, combinado! E qual é a sua idade?\n\nUtilizo esta informação para fornecer conteúdos adequados. Pode deixar que fica entre a gente.😉",
                 type: "text",
                 flow: "onboarding",
               };
@@ -174,7 +195,8 @@ const handleMessages = async (req, res, next) => {
 
             case "educationLevel":
               req.response = {
-                message: "E qual foi a última aventura que você teve na jornada do conhecimento? (ou seja, até onde você estudou?)",
+                message:
+                  "Ótimo, prometo não contar pra ninguem!! Já estamos na metade da nossa entrevista! 🎉\n\nE qual foi a última aventura que você teve na jornada do conhecimento? (ou seja, até onde você estudou?)📚",
                 type: "text",
                 flow: "onboarding",
               };
@@ -185,7 +207,8 @@ const handleMessages = async (req, res, next) => {
 
             case "profession":
               req.response = {
-                message: "E qual é o superpoder profissional que você usa para conquistar o mundo com seu Borogodó (ou, em outras palavras, qual é a sua profissão atual)?",
+                message:
+                  "Bom saber! E qual é o seu Borogodó (ou, em outras palavras, o que você faz atualmente) ✨?",
                 type: "text",
                 flow: "onboarding",
               };
@@ -194,9 +217,10 @@ const handleMessages = async (req, res, next) => {
               next();
               break;
 
-            case "country":
+            case "segment":
               req.response = {
-                message: "De qual canto incrível do nosso planeta Terra você está nos enviando sinais (em que país você reside)?",
+                message:
+                  "E em qual segmento você desenvolve este Borogodó (ou seja, em qual área de mercado você atua) 💼?",
                 type: "text",
                 flow: "onboarding",
               };
@@ -205,9 +229,10 @@ const handleMessages = async (req, res, next) => {
               next();
               break;
 
-            case "state":
+            case "country":
               req.response = {
-                message: "Em qual pedaço deste país você está explorando a vida (em que estado você mora)?",
+                message:
+                  "Estamos quase finalizando...\n\nDe qual canto do planeta 🌏 você está nos enviando sinais (em que país você mora)?",
                 type: "text",
                 flow: "onboarding",
               };
@@ -216,9 +241,10 @@ const handleMessages = async (req, res, next) => {
               next();
               break;
 
-            case "city":
+            case "state":
               req.response = {
-                message: "E em qual cidade você está desbravando o mundo (em que cidade você mora)?",
+                message:
+                  "E agora me fala, em qual pedaço deste país você está explorando a vida (em que estado você mora)?",
                 type: "text",
                 flow: "onboarding",
               };
@@ -226,11 +252,22 @@ const handleMessages = async (req, res, next) => {
               await userController.saveOpenFlow(userId, openFlow);
               next();
               break;
+
+            case "city":
+              req.response = {
+                message:
+                  "E lá vai a última: e em qual cidade você está?\n\nVou utilizar futuramente esta informação para te conectar com pessoas e oportunidades próximas a você, mas você pode alterar depois se quiser.",
+                type: "text",
+                flow: "onboarding",
+              };
+              openFlow = "01.09";
+              await userController.saveOpenFlow(userId, openFlow);
+              next();
+              break;
           }
 
-          // se o perfil tiver completo, perguntar qual campo deseja alterar
-          // se for < 8, envia uma pergunta do fluxo básico
-          // se for === 8, envia uma pergunta do fluxo avançado
+          // TODO: se perfil tiver completo, perguntar qual campo deseja alterar
+
           // se for > 8, envia uma pergunta do fluxo avançado
         }
 
@@ -238,7 +275,26 @@ const handleMessages = async (req, res, next) => {
         // caso as o usuário queira adicionar mais informações, realizar lista de perguntas avançadas.
 
         next();
-      } else {
+      }
+      // se for === members
+      else if (activeFlow === "members") {
+        if (req.whatsapp.msg_body.toLowerCase() === "eu quero".toLowerCase()) {
+          console.log("usuário solicitou o menu");
+          req.response = {
+            message:
+              "Combinado. Assim que tiver novidades vou te avisar. 😉\n\n"+
+              "Vou chamar o menu de funcionalidades novamente para você, ok?",
+            type: "text",
+            flow: "menu",
+          };
+          next();
+        } else {
+          next();
+        }
+      }
+      // caso seja qq outra coisa
+      else {
+        await userController.changeActiveFlow(userId, "conversa");
         next();
       }
     }

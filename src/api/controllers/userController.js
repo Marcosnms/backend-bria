@@ -71,12 +71,13 @@ const userController = {
       const fieldsToCheck = [
         "nickname",
         "gender",
-        "country",
-        "state",
-        "city",
         "age",
         "educationLevel",
         "profession",
+        "segment",
+        "country",
+        "state",
+        "city",
       ];
 
       // Conta os campos preenchidos
@@ -112,6 +113,7 @@ const userController = {
         "age",
         "educationLevel",
         "profession",
+        "segment",
         "country",
         "state",
         "city",
@@ -164,7 +166,7 @@ const userController = {
       const existingProfile = await prisma.basicProfile.findUnique({
         where: { userId: userId },
       });
-  
+
       // Se não existir, cria um novo BasicProfile
       if (!existingProfile) {
         await prisma.basicProfile.create({
@@ -188,7 +190,40 @@ const userController = {
       throw error;
     }
   },
-  
+
+  //  Busca o baseicProfile
+
+  getBasicProfile: async (userId) => {
+    try {
+      // Busca o perfil básico do usuário no banco de dados
+      const basicProfile = await prisma.basicProfile.findUnique({
+        where: { userId: userId },
+      });
+
+      if (!basicProfile) {
+        throw new Error("Perfil básico não encontrado.");
+      }
+
+      // Formata os dados para serem interpretados pela OpenAI
+      // Convertendo os dados do perfil em uma string JSON ou em um formato legível
+      const formattedProfile = {
+        nickname: basicProfile.nickname || "não especificado",
+        gender: basicProfile.gender || "não especificado",
+        country: basicProfile.country || "não especificado",
+        state: basicProfile.state || "não especificado",
+        city: basicProfile.city || "não especificado",
+        age: basicProfile.age || "não especificado",
+        educationLevel: basicProfile.educationLevel || "não especificado",
+        profession: basicProfile.profession || "não especificado",
+        segment: basicProfile.segment || "não especificado",
+      };
+
+      return (formattedProfile); // Ou retorne o objeto diretamente, dependendo de sua preferência
+    } catch (error) {
+      console.error("Erro ao buscar o perfil básico do usuário:", error);
+      throw error;
+    }
+  },
 
   // Retorna o score do AdvancedProfile
 };
