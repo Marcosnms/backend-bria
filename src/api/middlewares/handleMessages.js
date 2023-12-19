@@ -282,7 +282,7 @@ const handleMessages = async (req, res, next) => {
           console.log("usuário solicitou o menu");
           req.response = {
             message:
-              "Combinado. Assim que tiver novidades vou te avisar. 😉\n\n"+
+              "Combinado. Assim que tiver novidades vou te avisar. 😉\n\n" +
               "Vou chamar o menu de funcionalidades novamente para você, ok?",
             type: "text",
             flow: "menu",
@@ -292,6 +292,8 @@ const handleMessages = async (req, res, next) => {
           next();
         }
       }
+      // se for === borogoland
+
       // caso seja qq outra coisa
       else {
         await userController.changeActiveFlow(userId, "conversa");

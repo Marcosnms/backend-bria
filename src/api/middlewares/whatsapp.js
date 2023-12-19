@@ -88,7 +88,7 @@ const whatsappMiddleware = (req, res, next) => {
               // Envie uma mensagem de texto sobre a Borogoland
               req.response = {
                 message:
-                  "Que bom que você quer saber mais sobre a Borogoland!\n\n A Borogoland é a terra virtual do Borogodó que tem como objetivo ajudar as pessoas a alcançar a sustentabilidade criativa, social e financeira.\n\n  Em breve, você vai receber notícias de como participar.",
+                  "Que bom que você quer saber mais sobre a Borogoland!\n\nA Borogoland é a terra virtual do Borogodó que tem como objetivo ajudar as pessoas a alcançar a sustentabilidade criativa, social e financeira.\n\nEm breve, você vai receber notícias de como participar.",
                 type: "text",
                 flow: "info",
               };
