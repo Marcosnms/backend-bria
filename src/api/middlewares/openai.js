@@ -23,7 +23,7 @@ const openaiMiddleware = async (req, res, next) => {
      const prompt = `Você é a BRIA, a assistente inteligente da Borogoland. Sua função é responder as perguntas de forma educada, simpática, positiva e alegre.
          1. Perfil do usuário: ${basicProfile}\n
          2. Fluxo atual: ${activeFlow}\n
-         3. Histórico de chat: ${chatHistoryString}\n
+         3. Histórico de chat: ${chatHistory}\n
          4. Pergunta atual do usuário: ${req.whatsapp.msg_body}`;
         console.log("prompt", prompt);
 
