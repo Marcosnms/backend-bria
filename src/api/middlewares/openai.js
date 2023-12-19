@@ -15,24 +15,24 @@ const openaiMiddleware = async (req, res, next) => {
       console.log("foi pra ai responder");
 
       const basicProfile = await userController.getBasicProfile(userId);
-      const activeFlow = await userController.getOpenFlow(userId);
+      const activeFlow = await userController.getActiveFlow(userId);
       const chatHistory = await chatController.getChatHistory(userId);
 
       const api = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
       try {
-        const prompt = `Você é a BRIA, a assistente inteligente da Borogoland. Sua função é responder as perguntas de forma educada, simpatica, positiva e alegre.
-         Você está conversando com o usuário: ${JSON.stringify(basicProfile)}.\n
-         Você está respondendo uma pergunta relacionada ao fluxo de: ${activeFlow}.\n
-         Você está respondendo uma pergunta relacionada ao contexto no qual as últimas frases do usuário foram {${chatHistory}}.\n
-         Seu objetivo é ajudar o usuário a completar o fluxo que ele se encontra de forma orientativa e explicativa.\n;`;
+        const prompt = `1. Você é a BRIA, a assistente inteligente da Borogoland. Sua função é responder as perguntas de forma educada, simpatica, positiva e alegre.
+         2. Você está conversando com o usuário: ${JSON.stringify(basicProfile)}.\n
+         3. Você está respondendo uma pergunta relacionada ao fluxo de: ${activeFlow}.\n
+         4. Você está respondendo uma pergunta relacionada ao contexto no qual as últimas frases do usuário foram {${chatHistory}}.\n
+         5. Seu objetivo é ajudar o usuário a completar o fluxo que ele se encontra de forma orientativa e explicativa.\n
+         6. Você está respondendo a seguinte pergunta do usuário: ${req.whatsapp.msg_body}`;
 
         console.log("prompt", prompt);
 
         const completion = await api.chat.completions.create({
           model: "gpt-3.5-turbo",
           messages: [
-            { role: "system", content: prompt, name: "BRIA" },
-            { role: "user", content: req.whatsapp.msg_body},],
+            { role: "system", content: prompt, name: "BRIA" }],
         });
 
         let responseContent = completion.choices[0].message.content;

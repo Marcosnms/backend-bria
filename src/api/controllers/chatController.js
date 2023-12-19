@@ -40,15 +40,17 @@ const chatController = {
         orderBy: { createdAt: "desc" },
         select: {
           message: true,
+          createdByUser: true,
         },
       });
-      console.log("historico de chat", chatHistory);
-      const messages = chatHistory.map(chat => chat.message);
-      const combinedMessages = messages.join('\n');
 
+      let combinedMessages = chatHistory
+        .map((chat) => {
+          return (chat.createdByUser ? "Usuário: " : "BRIA: ") + chat.message;
+        })
+        .join("\n");
 
-      return combinedMessages;
-
+      return combinedMessages.toString();
     } catch (error) {
       console.error("Erro ao buscar histórico de chat:", error);
       return ""; // Retornando uma string vazia em caso de erro

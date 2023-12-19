@@ -12,8 +12,8 @@ const handleMessages = async (req, res, next) => {
     const { exists, userId } =
       await interactionController.findUserByWhatsappNumber(from);
 
+    // 01 - USUÁRIO NAO EXISTE
     if (!exists) {
-      // 01 - USUÁRIO NAO EXISTE
       // Usuário não encontrado, criar conta - OK
       console.log("usuário não existe");
       const newUser = {
@@ -51,9 +51,33 @@ const handleMessages = async (req, res, next) => {
       // Define quem é o usuário daqui pra frente - OK
       req.userId = userId;
 
+      // verifica se recusou os termos de uso
+      const compliance = await userController.getCompliance(userId);
+      if (compliance === false) {
+        console.log("usuário recusou os termos de uso");
+        req.response = {
+          message:
+            "Infelizmente você não pode continuar utilizando o serviço, pois não aceitou os termos de uso e a política de privacidade da Borogoland. Caso mude de opinião, vou enviar novamente para você.",
+          type: "text",
+          flow: "checkCompliance",
+        };
+      }
+
       // Salvar mensagem enviada pelo usuário - OK
       await chatController.saveUserMessage(userId, msg_body);
       console.log("mensagem salva no chat");
+
+      // verifica se o usário solicitou o menu
+      if (req.whatsapp.msg_body.toLowerCase() === "menu".toLowerCase()) {
+        console.log("usuário solicitou o menu");
+        req.response = {
+          message:
+            "Entendido! Vou te enviar o menu de funcionalidades disponíveis agora mesmo! 😎",
+          type: "text",
+          flow: "menu",
+        };
+        next();
+      }
 
       // Verifica se a mensagem é interativa - OK
       if (req.whatsapp.msg_type === "interactive") {
@@ -115,9 +139,9 @@ const handleMessages = async (req, res, next) => {
           console.log("Fluxo 01.09 tratado com sucesso.");
           req.response = {
             message:
-              "Ótimo! Seu perfil foi criado com sucesso! Agora, escolha uma das opções disponívels para continuarmos a nossa conversa.\n\nVocê pode chamar o menu de funcionalidades a qualquer momento digitando a palavra MENU.",
+              "Agora o último ponto importante: para continuar, preciso que você esteja de acordo com os termos de uso e a política de privacidade da Borogoland.",
             type: "text",
-            flow: "menu",
+            flow: "checkCompliance",
           };
           await userController.saveOpenFlow(userId, null);
           next();
@@ -128,19 +152,6 @@ const handleMessages = async (req, res, next) => {
       const activeFlow = await interactionController.getActiveFlow(userId);
       req.activeFlow = activeFlow;
       console.log("activeFlow:", activeFlow);
-
-      // verifica se o usário solicitou o menu
-
-      if (req.whatsapp.msg_body.toLowerCase() === "menu".toLowerCase()) {
-        console.log("usuário solicitou o menu");
-        req.response = {
-          message:
-            "Entendido! Vou te enviar o menu de funcionalidades disponíveis agora mesmo! 😎",
-          type: "text",
-          flow: "menu",
-        };
-        next();
-      }
 
       // se for === onboarding
       if (activeFlow === "onboarding") {
@@ -232,7 +243,7 @@ const handleMessages = async (req, res, next) => {
             case "country":
               req.response = {
                 message:
-                  "Estamos quase finalizando...\n\nDe qual canto do planeta 🌏 você está nos enviando sinais (em que país você mora)?",
+                  "Estamos quase acabando...\n\nEm qual canto do planeta 🌏 você está (em que país você mora)?",
                 type: "text",
                 flow: "onboarding",
               };
@@ -289,11 +300,16 @@ const handleMessages = async (req, res, next) => {
           };
           next();
         } else {
+          await userController.changeActiveFlow(userId, "conversa");
           next();
         }
       }
-      // se for === borogoland
-
+      // se for === compliance
+      else if (activeFlow === "compliance") {
+        // define o campo compliance como false
+        await userController.saveCompliance(userId, false);
+        next();
+      }
       // caso seja qq outra coisa
       else {
         await userController.changeActiveFlow(userId, "conversa");

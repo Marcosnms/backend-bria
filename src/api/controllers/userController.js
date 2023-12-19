@@ -125,7 +125,7 @@ const userController = {
         }
       }
 
-      return 8;
+      return 9;
     } catch (error) {
       console.error("Erro ao encontrar o primeiro campo vazio:", error);
       throw error;
@@ -153,6 +153,17 @@ const userController = {
         where: { id: userId },
       });
       return user.openFlow;
+    } catch (error) {
+      return null;
+    }
+  },
+
+  getActiveFlow: async (userId) => {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+      return user.activeFlow;
     } catch (error) {
       return null;
     }
@@ -222,6 +233,32 @@ const userController = {
     } catch (error) {
       console.error("Erro ao buscar o perfil básico do usuário:", error);
       throw error;
+    }
+  },
+
+  // função para salvar a resposta do usuário sobre o compliance
+
+  saveCompliance: async (userId, answer) => {
+    try {
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: { compliance: answer },
+      });
+    } catch (error) {
+      console.log("Erro ao salvar a resposta do usuário sobre o compliance:", error);
+    }
+  },
+
+  // function to get the compliance answer
+
+  getCompliance: async (userId) => {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+      return user.compliance;
+    } catch (error) {
+      return null;
     }
   },
 

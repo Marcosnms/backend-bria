@@ -8,17 +8,10 @@ const sendTermsAndPolicy = async (whatsappNumber, whatsappToken, to) => {
       to: to,
       type: "template",
       template: {
-        name: "terms_and_policy_template", // Nome do template criado no WhatsApp
+        name: "terms_and_policy", // Nome do template criado no WhatsApp
         language: {
           code: "pt_BR"
         },
-        components: [{
-          type: "body",
-          parameters: [{
-            type: "text",
-            text: "Por favor, leia e aceite os nossos Termos de Uso e Política de Privacidade."
-          }]
-        }]
       }
     };
 

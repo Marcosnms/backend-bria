@@ -76,8 +76,9 @@ const whatsappMiddleware = (req, res, next) => {
               // definir userFlow como "upgrade-24"
               req.response = {
                 message:
-                "Os melhores vídeos selecionados para você direto da Borogoteca.\n\n" +
-                "Equanto a integração não vem, acesse o link: https://transcriativa.cademi.com.br/ e saiba mais!",                type: "text",
+                  "Os melhores vídeos selecionados para você direto da Borogoteca.\n\n" +
+                  "Equanto a integração não vem, acesse o link: https://transcriativa.cademi.com.br/ e saiba mais!",
+                type: "text",
                 flow: "upgrade",
               };
               next();
@@ -110,7 +111,7 @@ const whatsappMiddleware = (req, res, next) => {
                   `- Borogodometro: https://www.borogodometro.com\n\n` +
                   `- Borogoteca: https://www.borogoteca.com\n\n` +
                   `- UnescoSost: https://www.unescosost.com.br\n\n` +
-                  '- Transcriativa: https://www.transcriativa.com.br',
+                  "- Transcriativa: https://www.transcriativa.com.br",
                 type: "text",
                 flow: "links",
               };
@@ -173,7 +174,7 @@ const whatsappMiddleware = (req, res, next) => {
                 message:
                   "Descubra o nível do seu Borogodó!\n\n" +
                   "Acesse o link: https://www.borogodometro.com.br e faça seu teste agora mesmo. É grátis, facil e rápido!\n\n" +
-                  "Em breve vai ter um Borogodometro aqui também!" ,
+                  "Em breve vai ter um Borogodometro aqui também!",
                 type: "text",
                 flow: "borogodometro",
               };
@@ -182,8 +183,40 @@ const whatsappMiddleware = (req, res, next) => {
           }
         }
       }
+      // 03. CASO OUTRA MENSAGEM SEJA A RESPOSTA DO UM BOTÃO DE COMPLIANCE
+      else if (msg_type === "button") {
+        const resposta =
+          req.body.entry[0].changes[0].value.messages[0].button.text;
 
-      // 03. CASO OUTRA MENSAGEM SEJA ENVIADA
+        // Anexa as informações extraídas à solicitação para uso posterior
+        req.whatsapp = {
+          whatsappNumber,
+          from,
+          msg_body: "resposta compliance",
+          name,
+          msg_type: "button",
+        };
+        // caso seja aceitar
+        if (resposta === "Aceitar") {
+          req.response = {
+            message:
+              "Ótimo! 👏🏼👏🏼👏🏼\n\nSeu perfil foi criado com sucesso! Agora, escolha uma das opções disponívels para continuarmos a nossa conversa.\n\nVocê pode chamar o menu de funcionalidades a qualquer momento digitando a palavra MENU.",
+            type: "text",
+            flow: "menu",
+          };
+          next();
+        } else if (resposta === "Recusar") {
+          req.response = {
+            message:
+              "Que pena! 😔 Você não aceitou os termos de uso. Por favor, aceite para continuarmos a nossa conversa.",
+            type: "text",
+            flow: "compliance",
+          };
+          next();
+        }
+      }
+
+      // 04. CASO OUTRA MENSAGEM SEJA ENVIADA
       else {
         // TODO: ajustar a resposta para dizer que não aceita esse tipo de mensagem no momento
         console.log(

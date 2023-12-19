@@ -91,6 +91,17 @@ app.post(
           }, 3000); // 000 milissegundos equivalem a 1 segundo
         }
 
+        else if (flow === "checkCompliance") {
+          setTimeout(() => {
+            sendTermsAndPolicy(
+              whatsappNumber,
+              process.env.WHATSAPP_TOKEN,
+              from
+            );
+          }, 3000); // 000 milissegundos equivalem a 1 segundo
+        }
+
+
         // se for uma consulta
         // se for o perfil
         // se for sobre cursos

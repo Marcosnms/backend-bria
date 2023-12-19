@@ -1,31 +1,74 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `activeConversation` on the `users` table. All the data in the column will be lost.
-  - A unique constraint covering the columns `[walletId]` on the table `users` will be added. If there are existing duplicate values, this will fail.
-
-*/
--- AlterTable
-ALTER TABLE "users" DROP COLUMN "activeConversation",
-ADD COLUMN     "activeFlow" TEXT DEFAULT 'onboarding',
-ADD COLUMN     "nickname" TEXT,
-ADD COLUMN     "walletId" TEXT;
+-- CreateEnum
+CREATE TYPE "VerificationCodeType" AS ENUM ('EMAIL');
 
 -- CreateTable
-CREATE TABLE "userProfile" (
+CREATE TABLE "users" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "email" TEXT,
+    "whatsappNumber" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "privateKey" VARCHAR(900),
+    "verifiedEmail" BOOLEAN NOT NULL DEFAULT false,
+    "member" BOOLEAN NOT NULL DEFAULT false,
+    "walletId" TEXT,
+    "activeFlow" TEXT DEFAULT 'onboarding',
+    "openFlow" TEXT,
+    "compliance" BOOLEAN,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "chats" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdByUser" BOOLEAN NOT NULL,
+
+    CONSTRAINT "chats_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "interactions" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "createdByUser" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "interactions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "basicProfile" (
+    "id" SERIAL NOT NULL,
+    "userId" TEXT NOT NULL,
+    "nickname" TEXT,
+    "gender" TEXT,
+    "country" TEXT,
+    "state" TEXT,
+    "city" TEXT,
+    "age" TEXT,
+    "educationLevel" TEXT,
+    "profession" TEXT,
+    "segment" TEXT,
+
+    CONSTRAINT "basicProfile_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "advancedProfile" (
     "id" SERIAL NOT NULL,
     "userId" TEXT NOT NULL,
     "fullName" TEXT,
     "profilePictureUrl" TEXT,
     "dateOfBirth" TIMESTAMP(3),
-    "gender" TEXT,
-    "country" TEXT,
-    "state" TEXT,
-    "city" TEXT,
     "language" TEXT DEFAULT 'pt-br',
     "interests" VARCHAR(900),
     "skills" VARCHAR(900),
-    "educationLevel" TEXT,
     "professionalBackground" VARCHAR(2000),
     "industry" TEXT,
     "goals" TEXT,
@@ -51,7 +94,7 @@ CREATE TABLE "userProfile" (
     "privacySettings" JSONB,
     "customFields" JSONB,
 
-    CONSTRAINT "userProfile_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "advancedProfile_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -104,7 +147,25 @@ CREATE TABLE "participants" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "userProfile_userId_key" ON "userProfile"("userId");
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_whatsappNumber_key" ON "users"("whatsappNumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_walletId_key" ON "users"("walletId");
+
+-- CreateIndex
+CREATE INDEX "chats_userId_idx" ON "chats"("userId");
+
+-- CreateIndex
+CREATE INDEX "chats_createdAt_idx" ON "chats"("createdAt");
+
+-- CreateIndex
+CREATE INDEX "chats_userId_createdAt_idx" ON "chats"("userId", "createdAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "basicProfile_userId_key" ON "basicProfile"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "advancedProfile_userId_key" ON "advancedProfile"("userId");
