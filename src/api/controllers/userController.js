@@ -218,15 +218,15 @@ const userController = {
       // Formata os dados para serem interpretados pela OpenAI
       // Convertendo os dados do perfil em uma string JSON ou em um formato legível
       const formattedProfile = {
-        nickname: basicProfile.nickname || "não especificado",
-        gender: basicProfile.gender || "não especificado",
-        country: basicProfile.country || "não especificado",
-        state: basicProfile.state || "não especificado",
-        city: basicProfile.city || "não especificado",
-        age: basicProfile.age || "não especificado",
-        educationLevel: basicProfile.educationLevel || "não especificado",
-        profession: basicProfile.profession || "não especificado",
-        segment: basicProfile.segment || "não especificado",
+        nome: basicProfile.nickname || "não especificado",
+        genero: basicProfile.gender || "não especificado",
+        pais: basicProfile.country || "não especificado",
+        estado: basicProfile.state || "não especificado",
+        cidade: basicProfile.city || "não especificado",
+        idade: basicProfile.age || "não especificado",
+        nivel_de_ensino: basicProfile.educationLevel || "não especificado",
+        profissao: basicProfile.profession || "não especificado",
+        segmento: basicProfile.segment || "não especificado",
       };
 
       return (formattedProfile); // Ou retorne o objeto diretamente, dependendo de sua preferência

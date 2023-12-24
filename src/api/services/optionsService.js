@@ -15,13 +15,13 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
           text: "😀 vamos começar",
         },
         body: {
-          text: "Escolha a opção abaixo e deixe a magia acontecer! 🌟",
+          text: "Clique no botão abaixo e deixe a magia acontecer! 🌟",
         },
         footer: {
           text: "BRIA, a Inteligência Coletiva da Borogoland",
         },
         action: {
-          button: "escolha",
+          button: "avançar",
           sections: [
             {
               title: "Listagem de Serviços",
@@ -30,7 +30,7 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
                   id: "onboarding",
                   title: "👤 Novo Perfil",
                   description:
-                    "Configure seus dados, suas preferências e defina o SEU Borogodó!",
+                    "selecione aqui para definir suas preferências e SEU Borogodó!",
                 },
               ],
             },

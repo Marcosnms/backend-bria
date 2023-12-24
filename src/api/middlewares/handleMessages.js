@@ -30,7 +30,8 @@ const handleMessages = async (req, res, next) => {
 
       // OK: salvar a mensagem enviada no histórico de interações
       req.response = {
-        message: `👋 Olá ${name}! Bem vindo(a) Borogoland! Eu sou a BRIA, sua assistente virtual e estou aqui para garantir que sua jornada seja incrível!\n\nBora começar contando sobre você e o seu borogodó lá no seu perfil?\nBasta escolher a opção "👤 Seu perfil" e adicionar as informações.😉`,
+        message: `👋 Olá ${name}!\n`+
+        "Bem-vindo(a) ao incrível universo da Borogoland! Eu sou a BRIA, sua assistente virtual cheia de Borogodó, pronta para te guiar nesta jornada repleta de criatividade, conexões e, claro, muitas oportunidades. Aqui é o lugar onde a mágica acontece! ✨",
         type: "text",
         flow: "chegada",
       };
@@ -50,18 +51,6 @@ const handleMessages = async (req, res, next) => {
       console.log("usuário já existe");
       // Define quem é o usuário daqui pra frente - OK
       req.userId = userId;
-
-      // verifica se recusou os termos de uso
-      const compliance = await userController.getCompliance(userId);
-      if (compliance === false) {
-        console.log("usuário recusou os termos de uso");
-        req.response = {
-          message:
-            "Infelizmente você não pode continuar utilizando o serviço, pois não aceitou os termos de uso e a política de privacidade da Borogoland. Caso mude de opinião, vou enviar novamente para você.",
-          type: "text",
-          flow: "checkCompliance",
-        };
-      }
 
       // Salvar mensagem enviada pelo usuário - OK
       await chatController.saveUserMessage(userId, msg_body);
@@ -95,8 +84,6 @@ const handleMessages = async (req, res, next) => {
           field = "nickname";
           await userController.saveBasicProfileData(userId, field, msg_body);
           console.log("Fluxo 01.01 tratado com sucesso.");
-          // enviar uma resposta
-          // enviar a próxima pergunta (ativo)
           break;
         case "01.02":
           field = "gender";
