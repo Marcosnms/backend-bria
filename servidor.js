@@ -93,7 +93,7 @@ app.post(
           // msge 03
           setTimeout(() => {
             let message =
-              "👥 Na nossa Área de Membros, você encontra eventos exclusivos, mentoria que realmente faz a diferença e, claro, aquele suporte amigo para te acompanhar em cada passo. E não podemos esquecer dos nossos serviços criativos, onde você pode oferecer ou contratar serviços com um toque especial de Borogodó (BRGD)!";
+              "👥 Na nossa Área de Membros, você encontra eventos exclusivos, mentoria que realmente faz a diferença e, claro, aquele suporte amigo para te acompanhar em cada passo. E não podemos esquecer dos nossos serviços criativos, onde você pode oferecer ou contratar serviços com um toque especial de Borogodó!";
             messageService(
               whatsappNumber,
               process.env.WHATSAPP_TOKEN,
