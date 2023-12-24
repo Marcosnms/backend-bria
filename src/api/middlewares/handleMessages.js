@@ -125,10 +125,9 @@ const handleMessages = async (req, res, next) => {
           await userController.saveBasicProfileData(userId, field, msg_body);
           console.log("Fluxo 01.09 tratado com sucesso.");
           req.response = {
-            message:
-              "Agora o último ponto importante: para continuar, preciso que você esteja de acordo com os termos de uso e a política de privacidade da Borogoland.",
+            message: "Ótimo! 👏🏼👏🏼👏🏼\n\nSeu perfil foi criado com sucesso! Agora, escolha uma das opções disponívels para continuarmos a nossa conversa.\n\nVocê pode chamar o menu de funcionalidades a qualquer momento digitando a palavra MENU.",
             type: "text",
-            flow: "checkCompliance",
+            flow: "menu",
           };
           await userController.saveOpenFlow(userId, null);
           next();
@@ -159,7 +158,7 @@ const handleMessages = async (req, res, next) => {
             case "nickname":
               req.response = {
                 message:
-                  "Ótimo! Uma grande alegria em ter você aqui.🥳\n\nVamos configurar o seu perfil. Prometo que vai ser rapidinho. Como você gostaria que eu te chamasse?",
+                  "Ótimo! Uma grande alegria em ter você aqui.🥳\n\nVamos configurar o seu perfil. Prometo que vai ser rapidinho. Escreva como você gostaria que eu te chamasse?",
                 type: "text",
                 flow: "onboarding",
               };

@@ -200,7 +200,7 @@ const whatsappMiddleware = (req, res, next) => {
         if (resposta === "Aceitar") {
           req.response = {
             message:
-              "Ótimo! 👏🏼👏🏼👏🏼\n\nSeu perfil foi criado com sucesso! Agora, escolha uma das opções disponívels para continuarmos a nossa conversa.\n\nVocê pode chamar o menu de funcionalidades a qualquer momento digitando a palavra MENU.",
+              "",
             type: "text",
             flow: "menu",
           };
@@ -208,9 +208,9 @@ const whatsappMiddleware = (req, res, next) => {
         } else if (resposta === "Recusar") {
           req.response = {
             message:
-              "Que pena! 😔 Você não aceitou os termos de uso. Por favor, aceite para continuarmos a nossa conversa.",
+              "",
             type: "text",
-            flow: "compliance",
+            flow: "menu",
           };
           next();
         }
