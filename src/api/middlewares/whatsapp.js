@@ -39,12 +39,13 @@ const whatsappMiddleware = (req, res, next) => {
         next(); // envia para a próxima etapa - handleMessages
 
         //______________________ configuração para respostas interativas _______________________//
-
-        // 02. CASO A MENSAGEM SEJA UMA RESPOSTA A UMA MENSAGEM INTERATIVA
-      } else if (msg_type === "interactive") {
+      }
+      // 02. CASO A MENSAGEM SEJA UMA RESPOSTA A UMA MENSAGEM INTERATIVA
+      else if (msg_type === "interactive") {
         console.log("mensagem interativa");
         const messageData = req.body.entry[0].changes[0].value.messages[0];
 
+        // 02.01 - caso seja a resposta de uma lista
         if (messageData.interactive.type === "list_reply") {
           const selectedOptionId = messageData.interactive.list_reply.id;
 
@@ -57,11 +58,10 @@ const whatsappMiddleware = (req, res, next) => {
             msg_type,
           };
 
-          // opções de resposta disponíveis
+          // opções de lista disponíveis
           switch (selectedOptionId) {
             // 01. ONBOARDING
             case "onboarding":
-              // definir userFlow como "onboarding" - OK (automático)
               req.response = {
                 message:
                   "Ótimo! Vamos configurar seu perfil. Me responda por gentileza algumas perguntas para que eu possa te conhecer melhor e ser mais assertiva nas minhas repostas e comportamento.",
@@ -71,13 +71,12 @@ const whatsappMiddleware = (req, res, next) => {
               next();
               break;
 
-            // TODO: 02. INFORMAÇÕES SOBRE O CURSO DE 2024
+            // TODO: 02. INFORMAÇÕES SOBRE A TRILHA DE UPGRADE
             case "upgrade":
-              // definir userFlow como "upgrade-24"
               req.response = {
                 message:
-                  "Os melhores vídeos selecionados para você direto da Borogoteca.\n\n" +
-                  "Equanto a integração não vem, acesse o link: https://transcriativa.cademi.com.br/ e saiba mais!",
+                  "Fique atualizado com o conteúdo estruturado por nossos especialistas.\n\n" +
+                  "Conheça as trilhas de conhecimento interativas e gamificadas que vão te ajudar a alcançar a sustentabilidade criativa, social e financeira.\n\n",
                 type: "text",
                 flow: "upgrade",
               };
@@ -96,30 +95,7 @@ const whatsappMiddleware = (req, res, next) => {
               next();
               break;
 
-            // TODO: 04. LINKS ÚTEIS
-            case "links":
-              // Envie uma lista com links úteis
-              req.response = {
-                message:
-                  `Aqui estão alguns links úteis para você começar a sua Jornada:\n\n` +
-                  `- Instagram: https://www.instagram.com/borogoland\n\n` +
-                  `- Tiktok: https://www.tiktok.com/@borogoland\n\n` +
-                  `- LinkedIn: https://www.linkedin.com/company/borogoland\n\n` +
-                  `- Discord: https://discord.gg/B24VqRfXMr\n\n` +
-                  `- Youtube: https://www.youtube.com/channel/UCO85c-JdLowXjLjZc8udKGg\n\n` +
-                  `- Borogoland: https://www.borogoland.com\n\n` +
-                  `- Borogodometro: https://www.borogodometro.com\n\n` +
-                  `- Borogoteca: https://www.borogoteca.com\n\n` +
-                  `- UnescoSost: https://www.unescosost.com.br\n\n` +
-                  "- Transcriativa: https://www.transcriativa.com.br",
-                type: "text",
-                flow: "links",
-              };
-
-              next();
-              break;
-
-            // TODO: 05. ÁREA DE MEMBROS
+            // TODO: 04. ÁREA DE MEMBROS
             case "members":
               // Envie uma imagem representando a área de membros
               req.response = {
@@ -131,11 +107,47 @@ const whatsappMiddleware = (req, res, next) => {
               next();
               break;
 
+            // TODO: 04.01 ÁREA DE MEMBROS - EVENTOS
+            case "eventos":
+              // Envie uma imagem representando a área de membros
+              req.response = {
+                message:
+                  "Em breve novos eventos serão divulgados. Caso queira ser avisado sobre a disponibilidade e benefícios de ser um membro, escreva:\n\neu quero",
+                type: "text",
+                flow: "members",
+              };
+              next();
+              break;
+
+            // TODO: 04.02 ÁREA DE MEMBROS - MENTORIA
+            case "mentoria":
+              // Envie uma imagem representando a área de membros
+              req.response = {
+                message:
+                  "Em breve novas mentorias serão divulgadas. Caso queira ser avisado sobre a disponibilidade e benefícios de ser um membro, escreva:\n\neu quero",
+                type: "text",
+                flow: "members",
+              };
+              next();
+              break;
+
+            // TODO: 05. DAO
+            case "borogodao":
+              // Envie uma imagem representando a área de membros
+              req.response = {
+                message:
+                  "Em breve você saberá tudo para ser um membro! Caso queira ser avisado sobre a disponibilidade e benefícios de ser um membro, escreva:\n\neu quero",
+                type: "text",
+                flow: "borogodao",
+              };
+              next();
+              break;
+
             // TODO: 06. PERFIL DO USUÁRIO
             case "profile":
               req.response = {
                 message:
-                  "Em breve, vamos melhorar seu perfil. Por enquanto, me pergunte alguma coisa sobre você e eu te responderei. ",
+                  "Em breve, vamos melhorar seu perfil. Por enquanto, me pergunte alguma coisa e eu te responderei. ",
                 type: "text",
                 flow: "profile",
               };
@@ -182,41 +194,22 @@ const whatsappMiddleware = (req, res, next) => {
               break;
           }
         }
-      }
-      // 03. CASO OUTRA MENSAGEM SEJA A RESPOSTA DO UM BOTÃO DE COMPLIANCE
-      else if (msg_type === "button") {
-        const resposta =
-          req.body.entry[0].changes[0].value.messages[0].button.text;
 
-        // Anexa as informações extraídas à solicitação para uso posterior
-        req.whatsapp = {
-          whatsappNumber,
-          from,
-          msg_body: "resposta compliance",
-          name,
-          msg_type: "button",
-        };
-        // caso seja aceitar
-        if (resposta === "Aceitar") {
-          req.response = {
-            message:
-              "",
-            type: "text",
-            flow: "menu",
-          };
-          next();
-        } else if (resposta === "Recusar") {
-          req.response = {
-            message:
-              "",
-            type: "text",
-            flow: "menu",
+        // 02.02 - caso seja a resposta de um botão
+        else if (messageData.interactive.type === "button_reply") {
+          const selectedOptionId = messageData.interactive.button_reply.id;
+          // Anexa as informações extraídas à solicitação para uso posterior
+          req.whatsapp = {
+            whatsappNumber,
+            from,
+            msg_body: selectedOptionId,
+            name,
+            msg_type: "text",
           };
           next();
         }
       }
-
-      // 04. CASO OUTRA MENSAGEM SEJA ENVIADA
+      // 03. CASO OUTRA MENSAGEM SEJA ENVIADA
       else {
         // TODO: ajustar a resposta para dizer que não aceita esse tipo de mensagem no momento
         console.log(
@@ -226,7 +219,6 @@ const whatsappMiddleware = (req, res, next) => {
     }
   }
 };
-
 // ______________________funções do whatsapp________________________//
 // _________________________________________________________________//
 

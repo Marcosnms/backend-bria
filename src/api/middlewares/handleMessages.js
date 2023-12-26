@@ -1,6 +1,8 @@
 const chatController = require("../controllers/chatController");
 const interactionController = require("../controllers/interactionController");
 const userController = require("../controllers/userController");
+const { use } = require("../routes/userRoutes");
+const getLocation = require("../services/location");
 
 const handleMessages = async (req, res, next) => {
   console.log("chegou no handleMessages");
@@ -30,14 +32,17 @@ const handleMessages = async (req, res, next) => {
 
       // OK: salvar a mensagem enviada no histórico de interações
       req.response = {
-        message: `👋 Olá ${name}!\n`+
-        "Bem-vindo(a) ao incrível universo da Borogoland! Eu sou a BRIA, sua assistente virtual cheia de Borogodó, pronta para te guiar nesta jornada repleta de criatividade, conexões e, claro, muitas oportunidades. Aqui é o lugar onde a mágica acontece! ✨",
+        message:
+          `👋 Olá ${name}!\n` +
+          "Bem-vindo(a) ao incrível universo da Borogoland! Eu sou a BRIA, sua assistente virtual cheia de Borogodó, pronta para te guiar nesta jornada repleta de criatividade, conexões e, claro, muitas oportunidades. Aqui é o lugar onde a mágica acontece! ✨",
         type: "text",
         flow: "chegada",
       };
       console.log("novo usuário criado");
       const { exists, userId } =
         await interactionController.findUserByWhatsappNumber(from);
+
+      // TODO: 26/12 criar uma thread para a criação do perfil do ususário e associar a BRIA
 
       // INTERACTION 01.01 - Salvar a chegada do usuário - OK
       await interactionController.saveUserInteraction(userId, "CHEGADA", true);
@@ -73,7 +78,7 @@ const handleMessages = async (req, res, next) => {
         await userController.changeActiveFlow(userId, req.response.flow);
       }
 
-      // buscar para ver se tem openFlow
+      // buscar para ver se tem openFlow - cadastro básico
       const openFlow = await userController.getOpenFlow(userId);
       console.log("openFlow:", openFlow);
       let field = "";
@@ -82,6 +87,7 @@ const handleMessages = async (req, res, next) => {
           break;
         case "01.01":
           field = "nickname";
+          // função para verificar se a resposta é válida (Nome)
           await userController.saveBasicProfileData(userId, field, msg_body);
           console.log("Fluxo 01.01 tratado com sucesso.");
           break;
@@ -109,23 +115,9 @@ const handleMessages = async (req, res, next) => {
           field = "segment";
           await userController.saveBasicProfileData(userId, field, msg_body);
           console.log("Fluxo 01.06 tratado com sucesso.");
-          break;
-        case "01.07":
-          field = "country";
-          await userController.saveBasicProfileData(userId, field, msg_body);
-          console.log("Fluxo 01.07 tratado com sucesso.");
-          break;
-        case "01.08":
-          field = "state";
-          await userController.saveBasicProfileData(userId, field, msg_body);
-          console.log("Fluxo 01.08 tratado com sucesso.");
-          break;
-        case "01.09":
-          field = "city";
-          await userController.saveBasicProfileData(userId, field, msg_body);
-          console.log("Fluxo 01.09 tratado com sucesso.");
           req.response = {
-            message: "Ótimo! 👏🏼👏🏼👏🏼\n\nSeu perfil foi criado com sucesso! Agora, escolha uma das opções disponívels para continuarmos a nossa conversa.\n\nVocê pode chamar o menu de funcionalidades a qualquer momento digitando a palavra MENU.",
+            message:
+              "Ótimo! 👏🏼👏🏼👏🏼\n\nProntinho! Seu perfil foi criado com sucesso! Agora, escolha uma das opções disponíveis para continuarmos a nossa conversa.\n\nE lembre-se, você pode chamar o menu de funcionalidades a qualquer momento digitando a palavra MENU.",
             type: "text",
             flow: "menu",
           };
@@ -148,6 +140,15 @@ const handleMessages = async (req, res, next) => {
         console.log("scoreBasicProfile:", scoreBasicProfile);
         // tratamento do fluxo básico de PERFIL
         // TODO: adicionar response_validation com OpenAi. Caso a resposta não seja válida, enviar uma mensagem de erro e pedir para repetir
+
+        if (scoreBasicProfile === 0) {
+          // salva os dados de localiação do usuário
+          const location = await getLocation();
+          const { country, region_code, city } = location;
+          console.log("location:", location);
+          await userController.saveUserLocation(userId, country, region_code, city);
+        }
+        
         if (scoreBasicProfile < 9) {
           const nextQuestion = await userController.getNextBasicProfileQuestion(
             userId
@@ -169,11 +170,12 @@ const handleMessages = async (req, res, next) => {
 
             case "gender":
               req.response = {
-                message: `🤓 Uau... que nome bonito ${msg_body}! Um grande prazer em te conhecer.\n\nE qual o pronome de tratamento que você gostaria que eu utilize em nossas conversas (Masculino, Feminino, Outros)?`,
+                message: `🤓 Uau... que nome bonito ${msg_body}! Um grande prazer em te conhecer.\n\nE qual o pronome de tratamento que você gostaria que eu utilize em nossas conversas?`,
                 type: "text",
-                flow: "onboarding",
+                flow: "gender",
               };
               openFlow = "01.02";
+
               await userController.saveOpenFlow(userId, openFlow);
               next();
               break;
@@ -193,7 +195,7 @@ const handleMessages = async (req, res, next) => {
             case "educationLevel":
               req.response = {
                 message:
-                  "Ótimo, prometo não contar pra ninguem!! Já estamos na metade da nossa entrevista! 🎉\n\nE qual foi a última aventura que você teve na jornada do conhecimento? (ou seja, até onde você estudou?)📚",
+                  "Ótimo, prometo não contar pra ninguem!! Já estamos na metade da nossa entrevista! 🎉\n\nE qual seu grau de escolaridade? 📚",
                 type: "text",
                 flow: "onboarding",
               };
@@ -205,7 +207,7 @@ const handleMessages = async (req, res, next) => {
             case "profession":
               req.response = {
                 message:
-                  "Bom saber! E qual é o seu Borogodó (ou, em outras palavras, o que você faz atualmente) ✨?",
+                  "Bom saber! E qual é o seu Borogodó (ou, em outras palavras, o que te faz especial?) ✨?",
                 type: "text",
                 flow: "onboarding",
               };
@@ -217,7 +219,7 @@ const handleMessages = async (req, res, next) => {
             case "segment":
               req.response = {
                 message:
-                  "E em qual segmento você desenvolve este Borogodó (ou seja, em qual área de mercado você atua) 💼?",
+                  "E em qual área você desenvolve este Borogodó (ou em qual segmento de mercado você atua) 💼?",
                 type: "text",
                 flow: "onboarding",
               };
@@ -226,31 +228,6 @@ const handleMessages = async (req, res, next) => {
               next();
               break;
 
-            case "country":
-              req.response = {
-                message:
-                  "Estamos quase acabando...\n\nEm qual canto do planeta 🌏 você está (em que país você mora)?",
-                type: "text",
-                flow: "onboarding",
-              };
-              openFlow = "01.07";
-              await userController.saveOpenFlow(userId, openFlow);
-              next();
-              break;
-
-            case "state":
-              req.response = {
-                message:
-                  "E agora me fala, em qual pedaço deste país você está explorando a vida (em que estado você mora)?",
-                type: "text",
-                flow: "onboarding",
-              };
-              openFlow = "01.08";
-              await userController.saveOpenFlow(userId, openFlow);
-              next();
-              break;
-
-            case "city":
               req.response = {
                 message:
                   "E lá vai a última: e em qual cidade você está?\n\nVou utilizar futuramente esta informação para te conectar com pessoas e oportunidades próximas a você, mas você pode alterar depois se quiser.",
@@ -268,7 +245,6 @@ const handleMessages = async (req, res, next) => {
           // se for > 8, envia uma pergunta do fluxo avançado
         }
 
-        // caso as infos básicas estiverem preenchidas, envia uma mensagem de boas vindas e o menu principal
         // caso as o usuário queira adicionar mais informações, realizar lista de perguntas avançadas.
 
         next();
@@ -289,12 +265,6 @@ const handleMessages = async (req, res, next) => {
           await userController.changeActiveFlow(userId, "conversa");
           next();
         }
-      }
-      // se for === compliance
-      else if (activeFlow === "compliance") {
-        // define o campo compliance como false
-        await userController.saveCompliance(userId, false);
-        next();
       }
       // caso seja qq outra coisa
       else {

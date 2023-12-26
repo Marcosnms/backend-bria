@@ -18,7 +18,9 @@ const handleMessages = require("./src/api/middlewares/handleMessages");
 // Importação de Serviços
 const messageService = require("./src/api/services/messageService");
 const optionsService = require("./src/api/services/optionsService");
-const sendMessageToAllUsers = require("./src/api/services/interactionService");
+//const sendMessageToAllUsers = require("./src/api/services/interactionService");
+const sendGenderTypes = require("./src/api/services/gender");
+// const getLocation = require("./src/api/services/location");
 
 // Configuração do dotenv
 dotenv.config();
@@ -81,7 +83,7 @@ app.post(
 
           // msge 02
           setTimeout(() => {
-            let message = "Mas espera, tem mais! 🎉";
+            let message = "Mas espera, tem mais... 🎉";
             messageService(
               whatsappNumber,
               process.env.WHATSAPP_TOKEN,
@@ -129,7 +131,11 @@ app.post(
           // msge 06
           setTimeout(() => {
             let message =
-              "Lembre-se, aqui na Borogoland, cada passo seu é um passo em direção ao sucesso e à realização criativa! Vamos construir essa história juntos? 🚀";
+              "Contudo, antes de mergulharmos no universo cheio de borogodó da Borogoland, precisamos de um instante para falar sobre algumas coisas importantes.\n\n" +
+              "*Termos de Uso:* https://www.borogoland.com/termos-de-uso/\n\n" +
+              "*Política de Privacidade:* https://www.borogoland.com/politicas-de-privacidade/\n\n" +
+              "Ao clicar em 👤 Novo Perfil, você concorda com nossos Termos de Uso e Política de Privacidade. Nesses documentos, explicamos como cuidamos dos seus dados, seus direitos enquanto usuário e outras informações cruciais. Prometemos não usar juridiquês complicado! 😉";
+
             messageService(
               whatsappNumber,
               process.env.WHATSAPP_TOKEN,
@@ -141,6 +147,18 @@ app.post(
           // msge 07
           setTimeout(() => {
             let message =
+              "Lembre-se, aqui na Borogoland, cada passo seu é um passo em direção ao sucesso e à realização criativa! Vamos construir essa história juntos? 🚀";
+            messageService(
+              whatsappNumber,
+              process.env.WHATSAPP_TOKEN,
+              from,
+              message
+            );
+          }, 90000);
+
+          // msge 08
+          setTimeout(() => {
+            let message =
               "Com carinho,\n BRIA, sua parceira na jornada criativa! 🌟";
             messageService(
               whatsappNumber,
@@ -148,23 +166,7 @@ app.post(
               from,
               message
             );
-          }, 80000);
-
-          // msge 08
-          setTimeout(() => {
-            let message =
-              "Antes de mergulharmos no universo cheio de borogodó da Borogoland, precisamos de um instante para falar sobre algumas coisas importantes.\n\n" +
-              "*Termos de Uso:* https://www.borogoland.com/termos-de-uso/\n\n" +
-              "*Política de Privacidade:* https://www.borogoland.com/politicas-de-privacidade/\n\n" +
-              "Ao clicar em 👤 Novo Perfil, você concorda com nossos Termos de Uso e Política de Privacidade. Nesses documentos, explicamos como cuidamos dos seus dados, seus direitos enquanto usuário e outras informações cruciais. Prometemos não usar juridiquês complicado! 😉";
-
-            messageService(
-              whatsappNumber,
-              process.env.WHATSAPP_TOKEN,
-              from,
-              message
-            );
-          }, 85000);
+          }, 95000);
 
           // msge 09
           setTimeout(() => {
@@ -176,8 +178,13 @@ app.post(
             );
           }, 100000);
         }
-
-        // TODO: montar as funções para os outros flows
+        // gender
+        else if (flow === "gender") {
+          setTimeout(() => {
+            sendGenderTypes(whatsappNumber, process.env.WHATSAPP_TOKEN, from);
+          }, 3000);
+        }
+        // menu
         else if (flow === "menu") {
           setTimeout(() => {
             optionsService(
@@ -186,9 +193,10 @@ app.post(
               from,
               flow
             );
-          }, 3000); // 000 milissegundos equivalem a 1 segundo
+          }, 3000);
         }
 
+        // TODO: montar as funções para os outros flows
         // se for uma consulta
         // se for o perfil
         // se for sobre cursos
@@ -264,10 +272,16 @@ app.post("/optionmsg", (req, res) => {
 });
 
 // Rota de mensagem manual
-app.post("/feliznatal", (req, res) => {
-sendMessageToAllUsers();
-});
+// app.post("/feliznatal", (req, res) => {
+//   sendMessageToAllUsers();
+// });
 
+// // Rota de verificação de localização
+// app.post("/location", async (req, res) => {
+//   const location =  await getLocation();
+//   console.log(location)
+//   res.status(200).send("ok");
+// });
 
 // Rota de teste (opcional)
 app.get("/", (req, res) => {

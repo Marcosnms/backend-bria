@@ -1,4 +1,4 @@
-const { Configuration, OpenAI } = require("openai");
+const { OpenAI } = require("openai");
 const chatController = require("../controllers/chatController");
 const userController = require("../controllers/userController");
 const interactionController = require("../controllers/interactionController");
@@ -28,7 +28,7 @@ const openaiMiddleware = async (req, res, next) => {
         console.log("prompt", prompt);
 
         const completion = await api.chat.completions.create({
-          model: "gpt-3.5-turbo",
+          model: "gpt-3.5-turbo-1106",
           messages: [
             { role: "system", content: prompt, name: "BRIA" }],
         });

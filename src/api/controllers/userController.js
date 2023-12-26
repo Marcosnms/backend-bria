@@ -229,36 +229,42 @@ const userController = {
         segmento: basicProfile.segment || "não especificado",
       };
 
-      return (formattedProfile); // Ou retorne o objeto diretamente, dependendo de sua preferência
+      return formattedProfile; // Ou retorne o objeto diretamente, dependendo de sua preferência
     } catch (error) {
       console.error("Erro ao buscar o perfil básico do usuário:", error);
       throw error;
     }
   },
 
-  // função para salvar a resposta do usuário sobre o compliance
-
-  saveCompliance: async (userId, answer) => {
+  // Salva os dados de localização do usário
+  saveUserLocation: async (userId, city, state, country) => {
     try {
-      const updatedUser = await prisma.user.update({
-        where: { id: userId },
-        data: { compliance: answer },
+      // Verifica se já existe um BasicProfile para este userId
+      const existingProfile = await prisma.basicProfile.findUnique({
+        where: { userId: userId },
       });
+      if (!existingProfile) {
+        await prisma.basicProfile.create({
+          data: {
+            userId: userId,
+            city: city,
+            state: state,
+            country: country
+          },
+        });
+        console.log("BasicProfile criado com sucesso.");
+      } else {
+        // Se existir, atualiza os campos específicos
+        await prisma.basicProfile.update({
+          where: { userId: userId },
+          data: { city: city, state: state, country: country },
+        });
+        console.log("Localização do usuário atualizada com sucesso.");
+      }
+      console.log("Localização do usuário atualizada:");
     } catch (error) {
-      console.log("Erro ao salvar a resposta do usuário sobre o compliance:", error);
-    }
-  },
-
-  // function to get the compliance answer
-
-  getCompliance: async (userId) => {
-    try {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-      });
-      return user.compliance;
-    } catch (error) {
-      return null;
+      console.error("Erro ao salvar localização do usuário:", error);
+      throw error;
     }
   },
 

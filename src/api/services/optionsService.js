@@ -15,7 +15,7 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
           text: "😀 vamos começar",
         },
         body: {
-          text: "Clique no botão abaixo e deixe a magia acontecer! 🌟",
+          text: "Clique no botão avançar e deixe a magia acontecer! 🌟",
         },
         footer: {
           text: "BRIA, a Inteligência Coletiva da Borogoland",
@@ -30,7 +30,7 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
                   id: "onboarding",
                   title: "👤 Novo Perfil",
                   description:
-                    "selecione aqui para definir suas preferências e SEU Borogodó!",
+                    "clique aqui para definir suas preferências e SEU Borogodó!",
                 },
               ],
             },
@@ -98,14 +98,9 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
                 },
                 {
                   id: "upgrade",
-                  title: "🚀 Borogoteca",
+                  title: "🚀 Upgrade Kit",
                   description:
-                    "aumente o poder do seu Borogodó",
-                },
-                {
-                  id: "links",
-                  title: "🔗 Começe a Jornada",
-                  description: "acesse recursos que vão te ajudar a expandir seu Borogodó",
+                    "trilhas para aumentar o poder do seu Borogodó",
                 },
                 {
                   id: "members",
