@@ -147,7 +147,7 @@ app.post(
           // msge 07
           setTimeout(() => {
             let message =
-              "Lembre-se, aqui na Borogoland, cada passo seu é um passo em direção ao sucesso e à realização criativa! Vamos construir essa história juntos? 🚀";
+              "Lembre-se, aqui na Borogoland, cada passo seu é um passo em direção ao sucesso e a realização criativa! Vamos construir essa história juntos? 🚀";
             messageService(
               whatsappNumber,
               process.env.WHATSAPP_TOKEN,
