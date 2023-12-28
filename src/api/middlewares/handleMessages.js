@@ -149,7 +149,7 @@ const handleMessages = async (req, res, next) => {
           await agentController.createAgents(userId);
 
           // TODO: CRIAR UMA WALLET PARA O USUÁRIO
-
+          
           // salva os dados de localiação do usuário
           const location = await getLocation();
           const { country, region_code, city } = location;
