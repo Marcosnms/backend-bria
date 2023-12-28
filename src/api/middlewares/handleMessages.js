@@ -146,7 +146,9 @@ const handleMessages = async (req, res, next) => {
         // primeiro acesso do usuário
         if (scoreBasicProfile === 0) {
           // criar threads e agents para o usuário
+          console.log("criando threads e agents para o usuário");
           await agentController.createAgents(userId);
+
 
           // TODO: CRIAR UMA WALLET PARA O USUÁRIO
           

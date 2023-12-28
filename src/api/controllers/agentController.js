@@ -5,6 +5,7 @@ const { OpenAI } = require("openai");
 const agentController = {
   createAgents: async (userId) => {
     try {
+      console.log("Criando agentes e threads para o usuário:", userId);
       const flows = {
         upgrade: {
           assistant: "bria",
@@ -98,7 +99,7 @@ const agentController = {
           const thread = await createThread();
           const newThreadId = thread.id;
 
-          return prisma.agent.create({
+          return await prisma.agent.create({
             data: {
               userId: userId,
               flow: flow,
