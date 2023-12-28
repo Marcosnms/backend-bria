@@ -85,6 +85,12 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
               title: "Menu para membros",
               rows: [
                 {
+                  id: "servicos",
+                  title: "💡Serviços Criativos ",
+                  description:
+                    "oportunidades de jobs",
+                },
+                {
                   id: "mentoria",
                   title: "👩‍🏫 Mentoria",
                   description: "mentoria diária com a metodologia 5DO",
@@ -98,11 +104,12 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
                   id: "lista",
                   title: "📋 Lista de Membros",
                   description: "pesquise na lista de membros da Borogoland",
-                }, 
+                },
                 {
                   id: "suporte",
                   title: "🛠️ Suporte",
-                  description: "precisando de alguma ajuda? clique aqui pra falar com gente",
+                  description:
+                    "precisando de alguma ajuda? clique aqui pra falar com gente",
                 },
               ],
             },
@@ -177,12 +184,6 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
                 //   title: "👥 Área de Membros",
                 //   description:
                 //     "criando conexões e oportunidades para você",
-                // },
-                // {
-                //   id: "servicos",
-                //   title: "💡Serviços Criativos ",
-                //   description:
-                //     "oportunidades de jobs",
                 // },
                 // {
                 //   id: "wallet",
