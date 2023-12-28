@@ -51,7 +51,7 @@ const sendGenderTypes = async (whatsappNumber, whatsappToken, to) => {
       }
     );
 
-    console.log("Mensagem enviada com sucesso:", response.data);
+    console.log("Mensagem enviada com sucesso:");
   } catch (error) {
     console.error("Erro ao enviar a mensagem:", error);
   }

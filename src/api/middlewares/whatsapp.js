@@ -60,7 +60,7 @@ const whatsappMiddleware = (req, res, next) => {
 
           // opções de lista disponíveis
           switch (selectedOptionId) {
-            // 01. ONBOARDING
+            // 01. ONBOARDING - OK
             case "onboarding":
               req.response = {
                 message:
@@ -76,7 +76,12 @@ const whatsappMiddleware = (req, res, next) => {
               req.response = {
                 message:
                   "Fique atualizado com o conteúdo estruturado por nossos especialistas.\n\n" +
-                  "Conheça as trilhas de conhecimento interativas e gamificadas que vão te ajudar a alcançar a sustentabilidade criativa, social e financeira.\n\n",
+                  "Conheça as trilhas de conhecimento interativas e gamificadas que vão te ajudar a alcançar a sustentabilidade criativa, social e financeira.\n\n" +
+                  "As trilhas atuais disponíveis são:\n\n" +
+                  "🧠 Trilha da Inteligência Artificial Generativa\n" +
+                  "🌐 Trilha da Web3\n" +
+                  "🌌  Trilha do Metaverso\n\n" +
+                  "Qual trilha você quer conhecer?",
                 type: "text",
                 flow: "upgrade",
               };
@@ -88,7 +93,7 @@ const whatsappMiddleware = (req, res, next) => {
               // Envie uma mensagem de texto sobre a Borogoland
               req.response = {
                 message:
-                  "Que bom que você quer saber mais sobre a Borogoland!\n\nA Borogoland é a terra virtual do Borogodó que tem como objetivo ajudar as pessoas a alcançar a sustentabilidade criativa, social e financeira.\n\nEm breve, você vai receber notícias de como participar.",
+                  "Que bom que você quer saber mais sobre a Borogoland!\n\nA Borogoland é a terra virtual do Borogodó que tem como objetivo ajudar as pessoas a alcançar a sustentabilidade criativa, social e financeira.\n\nQual tipo de dúvida você tem sobre a Borogoland ou como posso te ajudar?",
                 type: "text",
                 flow: "info",
               };
@@ -114,7 +119,7 @@ const whatsappMiddleware = (req, res, next) => {
                 message:
                   "Em breve novos eventos serão divulgados. Caso queira ser avisado sobre a disponibilidade e benefícios de ser um membro, escreva:\n\neu quero",
                 type: "text",
-                flow: "members",
+                flow: "eventos",
               };
               next();
               break;
@@ -126,7 +131,31 @@ const whatsappMiddleware = (req, res, next) => {
                 message:
                   "Em breve novas mentorias serão divulgadas. Caso queira ser avisado sobre a disponibilidade e benefícios de ser um membro, escreva:\n\neu quero",
                 type: "text",
-                flow: "members",
+                flow: "mentoria",
+              };
+              next();
+              break;
+
+            // TODO: 04.03 ÁREA DE MEMBROS - LISTA DE MEMBROS
+            case "lista_membros":
+              // Envie uma imagem representando a área de membros
+              req.response = {
+                message:
+                  "Em breve novos membros serão divulgados. Caso queira ser avisado sobre a disponibilidade e benefícios de ser um membro, escreva:\n\neu quero",
+                type: "text",
+                flow: "lista",
+              };
+              next();
+              break;
+
+            // TODO: 04.04 ÁREA DE MEMBROS - SUPORTE
+            case "suporte":
+              // Envie uma imagem representando a área de membros
+              req.response = {
+                message:
+                  "Fale comigo! Como posso te ajudar?",
+                type: "text",
+                flow: "suporte",
               };
               next();
               break;
@@ -149,7 +178,7 @@ const whatsappMiddleware = (req, res, next) => {
                 message:
                   "Em breve, vamos melhorar seu perfil. Por enquanto, me pergunte alguma coisa e eu te responderei. ",
                 type: "text",
-                flow: "profile",
+                flow: "perfil",
               };
 
               next();
@@ -162,7 +191,7 @@ const whatsappMiddleware = (req, res, next) => {
                 message:
                   "Em breve, oportunidades para você ganhar dinheiro com seu Borogodó!",
                 type: "text",
-                flow: "servicos",
+                flow: "serviços",
               };
               next();
               break;

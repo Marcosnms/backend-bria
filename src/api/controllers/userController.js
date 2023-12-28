@@ -49,8 +49,10 @@ const userController = {
         where: { id: userId },
         data: { activeFlow },
       });
+      return activeFlow
     } catch (error) {
       console.log("Erro ao alterar o status do ActiveFlow:", error);
+      return null;
     }
   },
 
@@ -165,7 +167,7 @@ const userController = {
       });
       return user.activeFlow;
     } catch (error) {
-      return null;
+      return "conversa";
     }
   },
 
@@ -229,7 +231,7 @@ const userController = {
         segmento: basicProfile.segment || "não especificado",
       };
 
-      return formattedProfile; // Ou retorne o objeto diretamente, dependendo de sua preferência
+      return JSON.stringify(formattedProfile); // Ou retorne o objeto diretamente, dependendo de sua preferência
     } catch (error) {
       console.error("Erro ao buscar o perfil básico do usuário:", error);
       throw error;
@@ -237,7 +239,7 @@ const userController = {
   },
 
   // Salva os dados de localização do usário
-  saveUserLocation: async (userId, city, state, country) => {
+  saveUserLocation: async (userId, country, state, city) => {
     try {
       // Verifica se já existe um BasicProfile para este userId
       const existingProfile = await prisma.basicProfile.findUnique({

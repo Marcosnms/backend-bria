@@ -32,7 +32,8 @@ model User {
   advancedProfile AdvancedProfile[]
   services        Service[]
   events          Event[]
-  Participant     Participant[]
+  participants    Participant[]
+  agents          Agent[]
 
   @@map("users")
 }
@@ -166,4 +167,23 @@ model Participant {
   status       String // e.g., 'confirmed', 'waiting', 'cancelled'
 
   @@map("participants")
+}
+
+model Agent {
+  id             Int       @id @default(autoincrement())
+  userId         String // Relacionamento com o modelo de usuário
+  user           User      @relation(fields: [userId], references: [id])
+  flow           String // Identificador do fluxo de conversa
+  thread         String // Identificador da thread de conversa
+  assistant      String // Nome ou identificador do assistente específico
+  createdAt      DateTime  @default(now())
+  modifiedAt     DateTime  @updatedAt
+  deletedAt      DateTime? // Campo opcional para soft deletes
+  isActive       Boolean   @default(true) // Para gerenciar se a thread está ativa ou não
+  context        Json? // Informações adicionais de contexto da conversa
+  objective      String? // Objetivo específico da interação com o usuário
+  expiration     DateTime? // Data de expiração da thread, se aplicável
+  additionalInfo Json? // Qualquer outra informação relevante
+
+  @@map("agents")
 }

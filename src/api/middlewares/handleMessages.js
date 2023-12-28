@@ -1,8 +1,8 @@
 const chatController = require("../controllers/chatController");
 const interactionController = require("../controllers/interactionController");
 const userController = require("../controllers/userController");
-const { use } = require("../routes/userRoutes");
 const getLocation = require("../services/location");
+const agentController = require("../controllers/agentController");
 
 const handleMessages = async (req, res, next) => {
   console.log("chegou no handleMessages");
@@ -10,7 +10,6 @@ const handleMessages = async (req, res, next) => {
 
   try {
     // 00 - VERIFICAR COM QUE ESTAMOS FALANDO
-    // Verificar se usuário existe e buscar o id dele - OK
     const { exists, userId } =
       await interactionController.findUserByWhatsappNumber(from);
 
@@ -27,10 +26,10 @@ const handleMessages = async (req, res, next) => {
         },
       };
 
-      // INTERACTION 01 - Cadastra o usuário - OK
+      // Cadastra o usuário - OK
       await userController.createUserAccount(newUser);
 
-      // OK: salvar a mensagem enviada no histórico de interações
+      // Mensagem de boas vindas ao usuário - OK
       req.response = {
         message:
           `👋 Olá ${name}!\n` +
@@ -42,18 +41,20 @@ const handleMessages = async (req, res, next) => {
       const { exists, userId } =
         await interactionController.findUserByWhatsappNumber(from);
 
-      // TODO: 26/12 criar uma thread para a criação do perfil do ususário e associar a BRIA
-
-      // INTERACTION 01.01 - Salvar a chegada do usuário - OK
+      // Define o fluxo como Onboarding - OK
+      await userController.changeActiveFlow(userId, "onboarding");
+      // Salva a chegada do usuário - OK
       await interactionController.saveUserInteraction(userId, "CHEGADA", true);
-      // INTERACTION 01.02 - Salvar a mensagem enviada pelo usuário - OK
+      // Salva a mensagem enviada pelo usuário - OK
       await chatController.saveUserMessage(userId, msg_body);
 
       next();
-    } else {
-      // 02 - USUÁRIO EXISTE
+    }
 
+    // 02 - USUÁRIO EXISTE
+    else {
       console.log("usuário já existe");
+
       // Define quem é o usuário daqui pra frente - OK
       req.userId = userId;
 
@@ -61,7 +62,7 @@ const handleMessages = async (req, res, next) => {
       await chatController.saveUserMessage(userId, msg_body);
       console.log("mensagem salva no chat");
 
-      // verifica se o usário solicitou o menu
+      // verifica se o usário solicitou o menu - OK
       if (req.whatsapp.msg_body.toLowerCase() === "menu".toLowerCase()) {
         console.log("usuário solicitou o menu");
         req.response = {
@@ -73,66 +74,67 @@ const handleMessages = async (req, res, next) => {
         next();
       }
 
-      // Verifica se a mensagem é interativa - OK
+      // Verifica se a mensagem é interativa, caso positivo, muda o ActiveFlow - OK
       if (req.whatsapp.msg_type === "interactive") {
-        await userController.changeActiveFlow(userId, req.response.flow);
+         await userController.changeActiveFlow(
+          userId,
+          req.response.flow
+        );
       }
 
-      // buscar para ver se tem openFlow - cadastro básico
-      const openFlow = await userController.getOpenFlow(userId);
-      console.log("openFlow:", openFlow);
-      let field = "";
-      switch (openFlow) {
-        case null:
-          break;
-        case "01.01":
-          field = "nickname";
-          // função para verificar se a resposta é válida (Nome)
-          await userController.saveBasicProfileData(userId, field, msg_body);
-          console.log("Fluxo 01.01 tratado com sucesso.");
-          break;
-        case "01.02":
-          field = "gender";
-          await userController.saveBasicProfileData(userId, field, msg_body);
-          console.log("Fluxo 01.02 tratado com sucesso.");
-          break;
-        case "01.03":
-          field = "age";
-          await userController.saveBasicProfileData(userId, field, msg_body);
-          console.log("Fluxo 01.03 tratado com sucesso.");
-          break;
-        case "01.04":
-          field = "educationLevel";
-          await userController.saveBasicProfileData(userId, field, msg_body);
-          console.log("Fluxo 01.04 tratado com sucesso.");
-          break;
-        case "01.05":
-          field = "profession";
-          await userController.saveBasicProfileData(userId, field, msg_body);
-          console.log("Fluxo 01.05 tratado com sucesso.");
-          break;
-        case "01.06":
-          field = "segment";
-          await userController.saveBasicProfileData(userId, field, msg_body);
-          console.log("Fluxo 01.06 tratado com sucesso.");
-          req.response = {
-            message:
-              "Ótimo! 👏🏼👏🏼👏🏼\n\nProntinho! Seu perfil foi criado com sucesso! Agora, escolha uma das opções disponíveis para continuarmos a nossa conversa.\n\nE lembre-se, você pode chamar o menu de funcionalidades a qualquer momento digitando a palavra MENU.",
-            type: "text",
-            flow: "menu",
-          };
-          await userController.saveOpenFlow(userId, null);
-          next();
-          break;
-      }
+      // busca o Active flow do usuário - OK
+      const activeFlow = await userController.getActiveFlow(userId);
 
-      // verifica o user activeflow
-      const activeFlow = await interactionController.getActiveFlow(userId);
-      req.activeFlow = activeFlow;
-      console.log("activeFlow:", activeFlow);
+      // _______________________________________________ onboarding _______________________________________________ //
 
-      // se for === onboarding
       if (activeFlow === "onboarding") {
+        // buscar para ver se tem openFlow - cadastro básico - OK
+        const openFlow = await userController.getOpenFlow(userId);
+        console.log("openFlow:", openFlow);
+        let field = "";
+        switch (openFlow) {
+          case null:
+            break;
+          case "01.01":
+            field = "nickname";
+            // função para verificar se a resposta é válida (Nome)
+            await userController.saveBasicProfileData(userId, field, msg_body);
+            console.log("Fluxo 01.01 tratado com sucesso.");
+            break;
+          case "01.02":
+            field = "gender";
+            await userController.saveBasicProfileData(userId, field, msg_body);
+            console.log("Fluxo 01.02 tratado com sucesso.");
+            break;
+          case "01.03":
+            field = "age";
+            await userController.saveBasicProfileData(userId, field, msg_body);
+            console.log("Fluxo 01.03 tratado com sucesso.");
+            break;
+          case "01.04":
+            field = "educationLevel";
+            await userController.saveBasicProfileData(userId, field, msg_body);
+            console.log("Fluxo 01.04 tratado com sucesso.");
+            break;
+          case "01.05":
+            field = "profession";
+            await userController.saveBasicProfileData(userId, field, msg_body);
+            console.log("Fluxo 01.05 tratado com sucesso.");
+            break;
+          case "01.06":
+            field = "segment";
+            await userController.saveBasicProfileData(userId, field, msg_body);
+            console.log("Fluxo 01.06 tratado com sucesso.");
+            req.response = {
+              message:
+                "Ótimo! 👏🏼👏🏼👏🏼\n\nProntinho! Seu perfil foi criado com sucesso! Agora, escolha uma das opções disponíveis para continuarmos a nossa conversa.\n\nE lembre-se, você pode chamar o menu de funcionalidades a qualquer momento digitando a palavra MENU.",
+              type: "text",
+              flow: "menu",
+            };
+            await userController.saveOpenFlow(userId, null);
+            next();
+            break;
+        }
         // qual o score do BasicProfile
         const scoreBasicProfile = await userController.scoreBasicProfile(
           userId
@@ -141,14 +143,25 @@ const handleMessages = async (req, res, next) => {
         // tratamento do fluxo básico de PERFIL
         // TODO: adicionar response_validation com OpenAi. Caso a resposta não seja válida, enviar uma mensagem de erro e pedir para repetir
 
+        // primeiro acesso do usuário
         if (scoreBasicProfile === 0) {
+          // criar threads e agents para o usuário
+          await agentController.createAgents(userId);
+
+          // TODO: CRIAR UMA WALLET PARA O USUÁRIO
+
           // salva os dados de localiação do usuário
           const location = await getLocation();
           const { country, region_code, city } = location;
           console.log("location:", location);
-          await userController.saveUserLocation(userId, country, region_code, city);
+          await userController.saveUserLocation(
+            userId,
+            country,
+            region_code,
+            city
+          );
         }
-        
+
         if (scoreBasicProfile < 9) {
           const nextQuestion = await userController.getNextBasicProfileQuestion(
             userId
@@ -227,17 +240,6 @@ const handleMessages = async (req, res, next) => {
               await userController.saveOpenFlow(userId, openFlow);
               next();
               break;
-
-              req.response = {
-                message:
-                  "E lá vai a última: e em qual cidade você está?\n\nVou utilizar futuramente esta informação para te conectar com pessoas e oportunidades próximas a você, mas você pode alterar depois se quiser.",
-                type: "text",
-                flow: "onboarding",
-              };
-              openFlow = "01.09";
-              await userController.saveOpenFlow(userId, openFlow);
-              next();
-              break;
           }
 
           // TODO: se perfil tiver completo, perguntar qual campo deseja alterar
@@ -245,10 +247,67 @@ const handleMessages = async (req, res, next) => {
           // se for > 8, envia uma pergunta do fluxo avançado
         }
 
-        // caso as o usuário queira adicionar mais informações, realizar lista de perguntas avançadas.
+        next();
+      }
+
+      //_________________________________________________ upgrade ___________________________________________________ //
+      else if (activeFlow === "upgrade") {
+        //01. verificar se o usuário tem acesso ao curso (é membro ou tem o curso liberado)
+        //01.01 - caso negativo, fazer uma breve explicação de como funciona e listar para o usuário os cursos disponíveis. Verificar interesse e realizar oferta.
+        //01.02 - caso positivo, verificar se existe algum curso em andamento
+        //01.02.01 - caso não tenha nenhum curso em andamento, listar os cursos disponíveis para o usuário
+        //01.02.02 - caso tenha algum curso em andamento,  perguntar se ele deseja continuar o curso em andamento ou iniciar um novo curso
+        //01.03 - verificar qual o status do andamento do curso
+        //01.03.01 - enviar a mensagem de boas vindas ao curso e enviar a primeira aula
+        //01.03.02 - enviar as proximas aulas e mapear o progresso do usuário
+        //01.03.03 - enviar a mensagem de conclusão do curso e enviar o certificado
+        //01.04 - verificar se o usuário deseja continuar no curso ou se deseja fazer outro curso
+        const openFlow = await userController.getOpenFlow(userId);
+        console.log("openFlow:", openFlow);
+        let field = "";
+        switch (openFlow) {
+          case null:
+            break;
+          case "01.01": //
+            console.log("Fluxo 01.01 tratado com sucesso.");
+            break;
+          case "01.02":
+            console.log("Fluxo 01.02 tratado com sucesso.");
+            break;
+          case "01.03":
+            field = "age";
+            await userController.saveBasicProfileData(userId, field, msg_body);
+            console.log("Fluxo 01.03 tratado com sucesso.");
+            break;
+          case "01.04":
+            field = "educationLevel";
+            await userController.saveBasicProfileData(userId, field, msg_body);
+            console.log("Fluxo 01.04 tratado com sucesso.");
+            break;
+          case "01.05":
+            field = "profession";
+            await userController.saveBasicProfileData(userId, field, msg_body);
+            console.log("Fluxo 01.05 tratado com sucesso.");
+            break;
+          case "01.06":
+            field = "segment";
+            await userController.saveBasicProfileData(userId, field, msg_body);
+            console.log("Fluxo 01.06 tratado com sucesso.");
+            req.response = {
+              message:
+                "Ótimo! 👏🏼👏🏼👏🏼\n\nProntinho! Seu perfil foi criado com sucesso! Agora, escolha uma das opções disponíveis para continuarmos a nossa conversa.\n\nE lembre-se, você pode chamar o menu de funcionalidades a qualquer momento digitando a palavra MENU.",
+              type: "text",
+              flow: "menu",
+            };
+            await userController.saveOpenFlow(userId, null);
+            next();
+            break;
+        }
 
         next();
       }
+
+      //_________________________________________________ members ___________________________________________________ //
       // se for === members
       else if (activeFlow === "members") {
         if (req.whatsapp.msg_body.toLowerCase() === "eu quero".toLowerCase()) {
@@ -262,13 +321,13 @@ const handleMessages = async (req, res, next) => {
           };
           next();
         } else {
-          await userController.changeActiveFlow(userId, "conversa");
           next();
         }
       }
+
+      //_________________________________________________ conversa ___________________________________________________ //
       // caso seja qq outra coisa
       else {
-        await userController.changeActiveFlow(userId, "conversa");
         next();
       }
     }
