@@ -40,39 +40,35 @@ const openaiMiddleware = async (req, res, next) => {
         await addMessage();
 
         // run assistant
-        async function runAssistant() {
-          const run = await api.beta.threads.runs.create(thread, {
+
+        let run = await api.beta.threads.runs.create(thread, {
             assistant_id: agent.assistant,
             additional_instructions: basicProfile,
           });
           console.log("Run criado", run);
 
-          // aguarda a execução do run
+         while (run.status !== "completed" && run.status !== "failed") {} // aguarda a execução do run
 
 
          return ;
-        }
-        await runAssistant();
+        } catch (e) {
+            console.error("Erro ao interagir com a OpenAI:", e);
+            req.response = {
+              message: "Desculpe, não entendi. Poderia repetir?",
+              type: "text",
+              flow: "99",
+            };
+            next();
+            
+      //   // envia a resposta
+      //   req.response = {
+      //     message: "em breve respondo",
+      //     type: "text",
+      //     flow: activeFlow, // Varia de acordo com o fluxo atual
+      //   };
 
-
-
-
-        // envia a resposta
-        req.response = {
-          message: "em breve respondo",
-          type: "text",
-          flow: activeFlow, // Varia de acordo com o fluxo atual
-        };
-
-        console.log("Resposta:", req.response);
-      } catch (e) {
-        console.error("Erro ao interagir com a OpenAI:", e);
-        req.response = {
-          message: "Desculpe, não entendi. Poderia repetir?",
-          type: "text",
-          flow: "99",
-        };
-      }
+      //   console.log("Resposta:", req.response)
+    
     }
     console.log("salvando resposta da AI");
     await chatController.saveReplyMessage(userId, req.response.message);
