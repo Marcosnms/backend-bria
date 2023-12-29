@@ -18,7 +18,7 @@ const getLocation = async (whatsappNumber) => {
         {
           role: "system",
           content:
-            "responda apenas o nome de 1 cidade. só 1 palavra. Se for um nome composto, traga o nome completo e sem o uso de pontuações mas com o devido espaçamento.",
+            "responda apenas o nome de 1 cidade. só 1 palavra. Se for um nome composto, traga o nome completo e sem o uso de pontuações",
         },
         {
           role: "user",
@@ -27,6 +27,7 @@ const getLocation = async (whatsappNumber) => {
       ],
     });
     const cidade = completionCity.choices[0].message.content;
+    console.log(cidade);
 
     const completionState = await api.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -43,6 +44,7 @@ const getLocation = async (whatsappNumber) => {
       ],
     });
     const estado = completionState.choices[0].message.content;
+    console.log(estado);
 
     const response = {
       city: cidade,
@@ -56,4 +58,5 @@ const getLocation = async (whatsappNumber) => {
   }
 };
 
-module.exports = getLocation;
+// Exemplo de chamada da função
+getLocation('556192672882'); // Substitua pelo número desejado

@@ -95,6 +95,8 @@ const handleMessages = async (req, res, next) => {
         switch (openFlow) {
           case null:
             break;
+
+            // TODO: adicionar response_validation com OpenAi. Caso a resposta não seja válida, enviar uma mensagem de erro e pedir para repetir
           case "01.01":
             field = "nickname";
             // função para verificar se a resposta é válida (Nome)
@@ -141,7 +143,6 @@ const handleMessages = async (req, res, next) => {
         );
         console.log("scoreBasicProfile:", scoreBasicProfile);
         // tratamento do fluxo básico de PERFIL
-        // TODO: adicionar response_validation com OpenAi. Caso a resposta não seja válida, enviar uma mensagem de erro e pedir para repetir
 
         // primeiro acesso do usuário
         if (scoreBasicProfile === 0) {
@@ -152,14 +153,16 @@ const handleMessages = async (req, res, next) => {
 
           // TODO: CRIAR UMA WALLET PARA O USUÁRIO
           
+
+          // TODO: TESTAR NOVA LOCATION
           // salva os dados de localiação do usuário
-          const location = await getLocation();
-          const { country, region_code, city } = location;
+          const location = await getLocation(req.whatsapp.from);
+          const { country, state, city } = location;
           console.log("location:", location);
           await userController.saveUserLocation(
             userId,
             country,
-            region_code,
+            state,
             city
           );
         }
