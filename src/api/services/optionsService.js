@@ -61,7 +61,7 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
     }
   }
   // caso membros
-  else if (flow === "membros") {
+  else if (flow === "members") {
     try {
       console.log("chegou no optionService");
       console.log(whatsappNumber, whatsapp_token, to);
@@ -87,8 +87,7 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
                 {
                   id: "servicos",
                   title: "💡Serviços Criativos ",
-                  description:
-                    "oportunidades de jobs",
+                  description: "oportunidades de jobs",
                 },
                 {
                   id: "mentoria",
@@ -104,6 +103,12 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
                   id: "lista",
                   title: "📋 Lista de Membros",
                   description: "pesquise na lista de membros da Borogoland",
+                },
+                {
+                    id: "dao",
+                    title: "🤝 DAO da Borogoland",
+                    description:
+                      "comunidade de descentralização da Borogoland",
                 },
                 {
                   id: "suporte",
@@ -164,42 +169,37 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
               title: "Listagem de Serviços",
               rows: [
                 {
+                  id: "info",
+                  title: "🌍 Sobre a Borogoland",
+                  description: "informações sobre a terra do Borogodó",
+                },
+                {
                   id: "profile",
                   title: "👤 Seu Perfil",
-                  description: "qual o seu Borogodó",
+                  description: "sobre o seu Borogodó",
                 },
                 // {
                 //   id: "borogodometro",
                 //   title: "🌟 Borogodômetro",
                 //   description:
-                //     "qual o nível do seu Borogodó",
+                //     "medição do nível do seu Borogodó",
                 // },
                 {
                   id: "upgrade",
                   title: "🚀 Upgrade Kit",
                   description: "trilhas para aumentar o poder do seu Borogodó",
                 },
-                // {
-                //   id: "members",
-                //   title: "👥 Área de Membros",
-                //   description:
-                //     "criando conexões e oportunidades para você",
-                // },
-                // {
-                //   id: "wallet",
-                //   title: "🤑 Sua Wallet",
-                //   description:
-                //     "acesse sua carteira virtual e veja seus BRGDs acumulados",
-                // },
-                //   id: "dao",
-                //   title: "🤝 DAO da Borogoland",
-                //   description:
-                //     "comunidade de descentralização da Borogoland",
-                // },
+
                 {
-                  id: "info",
-                  title: "🌍 Sobre a Borogoland",
-                  description: "informações sobre a terra do Borogodó",
+                  id: "members",
+                  title: "👥 Área de Membros",
+                  description: "criando conexões e oportunidades para você",
+                },
+                {
+                  id: "wallet",
+                  title: "🤑 Sua Wallet",
+                  description:
+                    "acesse sua carteira virtual e veja seus BRGDs acumulados",
                 },
               ],
             },

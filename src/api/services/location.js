@@ -1,5 +1,6 @@
-import { parsePhoneNumber } from "libphonenumber-js";
-import { OpenAI } from "openai";
+const { parsePhoneNumber } = require("libphonenumber-js")
+const { OpenAI } = require("openai");
+
 
 const getLocation = async (whatsappNumber) => {
   const phoneNumber = parsePhoneNumber(`+${whatsappNumber}`);

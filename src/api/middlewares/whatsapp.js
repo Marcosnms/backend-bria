@@ -105,7 +105,7 @@ const whatsappMiddleware = (req, res, next) => {
               // Envie uma imagem representando a área de membros
               req.response = {
                 message:
-                  "Em breve você saberá tudo para ser um membro! Caso queira ser avisado sobre a disponibilidade e benefícios de ser um membro, escreva:\n\neu quero",
+                  "Ótimo! Vou te mostrar as opções de serviços que temos disponíveis para os nossos membros!",
                 type: "text",
                 flow: "members",
               };

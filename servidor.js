@@ -196,12 +196,24 @@ app.post(
           }, 3000);
         }
 
+        // membros
+        else if (flow === "members") {
+          setTimeout(() => {
+            optionsService(
+              whatsappNumber,
+              process.env.WHATSAPP_TOKEN,
+              from,
+              flow
+            );
+          }, 3000);
+        }
+
         // TODO: montar as funções para os outros flows
         // se for uma consulta
         // se for o perfil
         // se for sobre cursos
         // se for sobre eventos
-        // se for sobre membros
+
       }
     } else {
       console.log("outro tipo de mensagem");
