@@ -1,4 +1,4 @@
-import parsePhoneNumber from "libphonenumber-js";
+const parsePhoneNumber = require("libphonenumber-js");
 const { OpenAI } = require("openai");
 
 
