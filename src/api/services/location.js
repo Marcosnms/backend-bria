@@ -35,7 +35,7 @@ const getLocation = async (whatsappNumber) => {
         {
           role: "system",
           content:
-            "responda apenas com a UF do estado",
+            "responda apenas com as duas letras do UF do estado, sem pontuação e somente as 2 letras da abreviação do estado.",
         },
         {
           role: "user",

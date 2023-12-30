@@ -33,7 +33,7 @@ const handleMessages = async (req, res, next) => {
       req.response = {
         message:
           `👋 Olá ${name}!\n` +
-          "Bem-vindo(a) ao incrível universo da Borogoland! Eu sou a BRIA, sua assistente virtual cheia de Borogodó, pronta para te guiar nesta jornada repleta de criatividade, conexões e, claro, muitas oportunidades. Aqui é o lugar onde a mágica acontece! ✨",
+          "Bem-vindo(a) ao incrível universo da Borogoland, a terra do Borogodó! Eu sou a BRIA, sua assistente virtual cheia de Borogodó, pronta para te guiar nesta jornada repleta de criatividade, conexões e, claro, muitas oportunidades. Aqui é o lugar onde a mágica acontece! ✨",
         type: "text",
         flow: "chegada",
       };
