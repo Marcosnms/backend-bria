@@ -167,7 +167,7 @@ const userController = {
       });
       return user.activeFlow;
     } catch (error) {
-      return "conversa";
+      return "bria";
     }
   },
 
