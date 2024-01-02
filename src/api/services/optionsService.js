@@ -178,12 +178,12 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
                   title: "👤 Seu Perfil",
                   description: "sobre o seu Borogodó",
                 },
-                // {
-                //   id: "borogodometro",
-                //   title: "🌟 Borogodômetro",
-                //   description:
-                //     "medição do nível do seu Borogodó",
-                // },
+                {
+                  id: "borogodometro",
+                  title: "🌟 Borogodômetro",
+                  description:
+                    "medição do nível do seu Borogodó",
+                },
                 {
                   id: "upgrade",
                   title: "🚀 Upgrade Kit",
