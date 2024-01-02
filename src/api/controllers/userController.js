@@ -74,8 +74,6 @@ const userController = {
         "nickname",
         "gender",
         "age",
-        "educationLevel",
-        "profession",
         "segment",
         "country",
         "state",
@@ -113,8 +111,6 @@ const userController = {
         "nickname",
         "gender",
         "age",
-        "educationLevel",
-        "profession",
         "segment",
         "country",
         "state",
@@ -127,7 +123,7 @@ const userController = {
         }
       }
 
-      return 9;
+      return 7;
     } catch (error) {
       console.error("Erro ao encontrar o primeiro campo vazio:", error);
       throw error;

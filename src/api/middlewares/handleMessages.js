@@ -42,7 +42,7 @@ const handleMessages = async (req, res, next) => {
         await interactionController.findUserByWhatsappNumber(from);
 
       // Define o fluxo como Onboarding - OK
-      await userController.changeActiveFlow(userId, "onboarding");
+      await userController.changeActiveFlow(userId, "chegada");
       // Salva a chegada do usuário - OK
       await interactionController.saveUserInteraction(userId, "CHEGADA", true);
       // Salva a mensagem enviada pelo usuário - OK
@@ -83,6 +83,15 @@ const handleMessages = async (req, res, next) => {
       const activeFlow = await userController.getActiveFlow(userId);
 
       switch (activeFlow) {
+
+        //_________________________________________________ chegada ___________________________________________________ //
+        case "chegada":
+        req.response = {
+          message:"Aguade um momento, estou realizando minha apresentação... :) Ao terminar você vai ficar por dentro de tudo que eu posso fazer por você!",
+          type: "text",
+        }
+        next();
+        break
         // _______________________________________________ onboarding _______________________________________________ //
         case "onboarding":
           // qual o score do BasicProfile
@@ -108,7 +117,7 @@ const handleMessages = async (req, res, next) => {
             await userController.saveUserLocation(userId, country, state, city);
           }
 
-          if (scoreBasicProfile < 9) {
+          if (scoreBasicProfile < 7) {
             
             const nextQuestion =
               await userController.getNextBasicProfileQuestion(userId);
@@ -151,38 +160,14 @@ const handleMessages = async (req, res, next) => {
                 next();
                 break;
 
-              case "educationLevel":
+              case "segment":
                 req.response = {
                   message:
-                    "Ótimo, prometo não contar pra ninguem!! Já estamos na metade da nossa entrevista! 🎉\n\nE qual seu grau de escolaridade? 📚",
+                    "E em qual área você desenvolve seu Borogodó (ou em qual segmento de mercado você atua) 💼?",
                   type: "text",
                   flow: "onboarding",
                 };
                 openFlow = "01.04";
-                await userController.saveOpenFlow(userId, openFlow);
-                next();
-                break;
-
-              case "profession":
-                req.response = {
-                  message:
-                    "Bom saber! E qual é o seu Borogodó (ou, em outras palavras, o que te faz especial?) ✨?",
-                  type: "text",
-                  flow: "onboarding",
-                };
-                openFlow = "01.05";
-                await userController.saveOpenFlow(userId, openFlow);
-                next();
-                break;
-
-              case "segment":
-                req.response = {
-                  message:
-                    "E em qual área você desenvolve este Borogodó (ou em qual segmento de mercado você atua) 💼?",
-                  type: "text",
-                  flow: "onboarding",
-                };
-                openFlow = "01.06";
                 await userController.saveOpenFlow(userId, openFlow);
                 next();
                 break;
@@ -235,34 +220,15 @@ const handleMessages = async (req, res, next) => {
                 console.log("Fluxo 01.03 tratado com sucesso.");
                 next();
                 break;
+
               case "01.04":
-                field = "educationLevel";
-                await userController.saveBasicProfileData(
-                  userId,
-                  field,
-                  msg_body
-                );
-                console.log("Fluxo 01.04 tratado com sucesso.");
-                next();
-                break;
-              case "01.05":
-                field = "profession";
-                await userController.saveBasicProfileData(
-                  userId,
-                  field,
-                  msg_body
-                );
-                console.log("Fluxo 01.05 tratado com sucesso.");
-                next();
-                break;
-              case "01.06":
                 field = "segment";
                 await userController.saveBasicProfileData(
                   userId,
                   field,
                   msg_body
                 );
-                console.log("Fluxo 01.06 tratado com sucesso.");
+                console.log("Fluxo 01.04 tratado com sucesso.");
                 req.response = {
                   message:
                     "Ótimo! 👏🏼👏🏼👏🏼\n\nProntinho! Seu perfil foi criado com sucesso! Agora, escolha uma das opções disponíveis para continuarmos a nossa conversa.\n\nE lembre-se, você pode chamar o menu de funcionalidades a qualquer momento digitando a palavra MENU.",

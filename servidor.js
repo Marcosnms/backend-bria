@@ -18,9 +18,8 @@ const handleMessages = require("./src/api/middlewares/handleMessages");
 // Importação de Serviços
 const messageService = require("./src/api/services/messageService");
 const optionsService = require("./src/api/services/optionsService");
-//const sendMessageToAllUsers = require("./src/api/services/interactionService");
 const sendGenderTypes = require("./src/api/services/gender");
-// const getLocation = require("./src/api/services/location");
+const userController = require("./src/api/controllers/userController");
 
 // Configuração do dotenv
 dotenv.config();
@@ -65,6 +64,8 @@ app.post(
           replyMessage,
           res
         );
+
+        // TODO: trocar para switch case
 
         // onboarding
         const flow = req.response.flow;
@@ -169,7 +170,9 @@ app.post(
           }, 95000);
 
           // msge 09
-          setTimeout(() => {
+          setTimeout(async () => {
+
+            await userController.changeActiveFlow(userId, "onboarding");
             optionsService(
               whatsappNumber,
               process.env.WHATSAPP_TOKEN,
@@ -195,7 +198,6 @@ app.post(
             );
           }, 3000);
         }
-
         // membros
         else if (flow === "members") {
           setTimeout(() => {

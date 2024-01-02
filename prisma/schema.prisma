@@ -73,8 +73,6 @@ model BasicProfile {
   state          String?
   city           String?
   age            String?
-  educationLevel String?
-  profession     String?
   segment        String?
 
   @@map("basicProfile")
