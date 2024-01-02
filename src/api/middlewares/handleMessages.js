@@ -85,90 +85,6 @@ const handleMessages = async (req, res, next) => {
       switch (activeFlow) {
         // _______________________________________________ onboarding _______________________________________________ //
         case "onboarding":
-          // buscar para ver se tem openFlow - cadastro básico - OK
-          const openFlow = await userController.getOpenFlow(userId);
-          console.log("openFlow:", openFlow);
-          let field = "";
-          switch (openFlow) {
-            case null:
-              req.response = {
-                message:"Preciso que você responda algumas perguntas para que eu possa te atender melhor. Vamos lá?",
-                type: "text",
-                flow: "onboarding",
-              }
-              next();
-              break;
-
-            // TODO: adicionar response_validation com OpenAi. Caso a resposta não seja válida, enviar uma mensagem de erro e pedir para repetir
-            case "01.01":
-              field = "nickname";
-              // função para verificar se a resposta é válida (Nome)
-              await userController.saveBasicProfileData(
-                userId,
-                field,
-                msg_body
-              );
-              console.log("Fluxo 01.01 tratado com sucesso.");
-              next();
-              break;
-            case "01.02":
-              field = "gender";
-              await userController.saveBasicProfileData(
-                userId,
-                field,
-                msg_body
-              );
-              console.log("Fluxo 01.02 tratado com sucesso.");
-              next();
-              break;
-            case "01.03":
-              field = "age";
-              await userController.saveBasicProfileData(
-                userId,
-                field,
-                msg_body
-              );
-              console.log("Fluxo 01.03 tratado com sucesso.");
-              next();
-              break;
-            case "01.04":
-              field = "educationLevel";
-              await userController.saveBasicProfileData(
-                userId,
-                field,
-                msg_body
-              );
-              console.log("Fluxo 01.04 tratado com sucesso.");
-              next();
-              break;
-            case "01.05":
-              field = "profession";
-              await userController.saveBasicProfileData(
-                userId,
-                field,
-                msg_body
-              );
-              console.log("Fluxo 01.05 tratado com sucesso.");
-              next();
-              break;
-            case "01.06":
-              field = "segment";
-              await userController.saveBasicProfileData(
-                userId,
-                field,
-                msg_body
-              );
-              console.log("Fluxo 01.06 tratado com sucesso.");
-              req.response = {
-                message:
-                  "Ótimo! 👏🏼👏🏼👏🏼\n\nProntinho! Seu perfil foi criado com sucesso! Agora, escolha uma das opções disponíveis para continuarmos a nossa conversa.\n\nE lembre-se, você pode chamar o menu de funcionalidades a qualquer momento digitando a palavra MENU.",
-                type: "text",
-                flow: "menu",
-              };
-              await userController.saveOpenFlow(userId, null);
-              next();
-              break;
-          }
           // qual o score do BasicProfile
           const scoreBasicProfile = await userController.scoreBasicProfile(
             userId
@@ -193,6 +109,7 @@ const handleMessages = async (req, res, next) => {
           }
 
           if (scoreBasicProfile < 9) {
+            
             const nextQuestion =
               await userController.getNextBasicProfileQuestion(userId);
             console.log("nextQuestion:", nextQuestion);
@@ -271,8 +188,91 @@ const handleMessages = async (req, res, next) => {
                 break;
             }
 
-            // TODO: se perfil tiver completo, perguntar qual campo deseja alterar
+            // buscar para ver se tem openFlow - cadastro básico - OK
+            const nextFlow = await userController.getOpenFlow(userId);
+            console.log("nextFlow:", nextFlow);
+            let field = "";
+            switch (nextFlow) {
+              case null:
+                req.response = {
+                  message:
+                    "📝 Parece que seu perfil não está completo ainda. Preciso que você responda algumas perguntas para que eu possa te atender melhor 🌟. Vamos lá? 💪",
+                  type: "text",
+                  flow: "chegada",
+                };
+                next();
+                break;
 
+              // TODO: adicionar response_validation com OpenAi. Caso a resposta não seja válida, enviar uma mensagem de erro e pedir para repetir
+              case "01.01":
+                field = "nickname";
+                // função para verificar se a resposta é válida (Nome)
+                await userController.saveBasicProfileData(
+                  userId,
+                  field,
+                  msg_body
+                );
+                console.log("Fluxo 01.01 tratado com sucesso.");
+                next();
+                break;
+              case "01.02":
+                field = "gender";
+                await userController.saveBasicProfileData(
+                  userId,
+                  field,
+                  msg_body
+                );
+                console.log("Fluxo 01.02 tratado com sucesso.");
+                next();
+                break;
+              case "01.03":
+                field = "age";
+                await userController.saveBasicProfileData(
+                  userId,
+                  field,
+                  msg_body
+                );
+                console.log("Fluxo 01.03 tratado com sucesso.");
+                next();
+                break;
+              case "01.04":
+                field = "educationLevel";
+                await userController.saveBasicProfileData(
+                  userId,
+                  field,
+                  msg_body
+                );
+                console.log("Fluxo 01.04 tratado com sucesso.");
+                next();
+                break;
+              case "01.05":
+                field = "profession";
+                await userController.saveBasicProfileData(
+                  userId,
+                  field,
+                  msg_body
+                );
+                console.log("Fluxo 01.05 tratado com sucesso.");
+                next();
+                break;
+              case "01.06":
+                field = "segment";
+                await userController.saveBasicProfileData(
+                  userId,
+                  field,
+                  msg_body
+                );
+                console.log("Fluxo 01.06 tratado com sucesso.");
+                req.response = {
+                  message:
+                    "Ótimo! 👏🏼👏🏼👏🏼\n\nProntinho! Seu perfil foi criado com sucesso! Agora, escolha uma das opções disponíveis para continuarmos a nossa conversa.\n\nE lembre-se, você pode chamar o menu de funcionalidades a qualquer momento digitando a palavra MENU.",
+                  type: "text",
+                  flow: "menu",
+                };
+                await userController.saveOpenFlow(userId, "bria");
+                next();
+                break;
+            }
             // se for > 8, envia uma pergunta do fluxo avançado
           }
           next();
