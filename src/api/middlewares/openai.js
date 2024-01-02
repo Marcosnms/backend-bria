@@ -17,20 +17,20 @@ const openaiMiddleware = async (req, res, next) => {
       console.log("foi pra ai responder");
 
       const basicProfile = await userController.getBasicProfile(userId);
-      // console.log("basicProfile", basicProfile);
+      console.log("basicProfile", basicProfile);
       const activeFlow = await userController.getActiveFlow(userId);
-      // console.log("activeFlow", activeFlow);
+      console.log("activeFlow", activeFlow);
       const agent = await agentController.getAgent(userId, activeFlow);
-      // console.log("agent", agent.assistant);
+      console.log("agent", agent.assistant);
       const thread = agent.thread;
-      // console.log("thread", thread);
+      console.log("thread", thread);
 
       // realizar solicitação a openai com as instruções sobre o usuário como "additional_instructions"
       const api = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
       try {
         // adiciona a mensagem do usuário
 
-        let message = await api.beta.threads.messages.create(thread, {
+        let    = await api.beta.threads.messages.create(thread, {
           role: "user",
           content: req.whatsapp.msg_body,
         });
