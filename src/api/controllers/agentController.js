@@ -86,6 +86,16 @@ const agentController = {
           id: "asst_Hms8rIpqzC0PcMKVmYfy17AD",
           objective: "instruir o usuário na dúvida ou problema que ele tem",
         },
+        bria: {
+          assistant: "bria",
+          id: "asst_Hms8rIpqzC0PcMKVmYfy17AD",
+          objective: "instruir o usuário nos fluxos disponíveis",
+        },
+        onboarding: {
+          assistant: "bria",
+          id: "asst_Hms8rIpqzC0PcMKVmYfy17AD",
+          objective: "instruir o usuário no oboarding e cadastro de informações básicas",
+        },
       };
       const api = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
