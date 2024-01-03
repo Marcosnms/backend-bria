@@ -83,15 +83,15 @@ const handleMessages = async (req, res, next) => {
       const activeFlow = await userController.getActiveFlow(userId);
 
       switch (activeFlow) {
-
         //_________________________________________________ chegada ___________________________________________________ //
         case "chegada":
-        req.response = {
-          message:"Aguade um momento, estou realizando minha apresentação... :) Ao terminar você vai ficar por dentro de tudo que eu posso fazer por você!",
-          type: "text",
-        }
-        next();
-        break
+          req.response = {
+            message:
+              "Aguade um momento por gentileza, estou realizando minha apresentação... :)\n Ao terminar você vai ficar por dentro de tudo que eu posso fazer por você!",
+            type: "text",
+          };
+          next();
+          break;
         // _______________________________________________ onboarding _______________________________________________ //
         case "onboarding":
           // qual o score do BasicProfile
@@ -118,61 +118,6 @@ const handleMessages = async (req, res, next) => {
           }
 
           if (scoreBasicProfile < 7) {
-            
-            const nextQuestion =
-              await userController.getNextBasicProfileQuestion(userId);
-            console.log("nextQuestion:", nextQuestion);
-            let openFlow = "";
-            switch (nextQuestion) {
-              case "nickname":
-                req.response = {
-                  message:
-                    "Ótimo! Uma grande alegria em ter você aqui.🥳\n\nVamos configurar o seu perfil. Prometo que vai ser rapidinho. Escreva como você gostaria que eu te chamasse?",
-                  type: "text",
-                  flow: "onboarding",
-                };
-                openFlow = "01.01";
-                await userController.saveOpenFlow(userId, openFlow);
-                next();
-                break;
-
-              case "gender":
-                req.response = {
-                  message: `🤓 Uau... que nome bonito ${msg_body}! Um grande prazer em te conhecer.\n\nE qual o pronome de tratamento que você gostaria que eu utilize em nossas conversas?`,
-                  type: "text",
-                  flow: "gender",
-                };
-                openFlow = "01.02";
-
-                await userController.saveOpenFlow(userId, openFlow);
-                next();
-                break;
-
-              case "age":
-                req.response = {
-                  message:
-                    "Entendi, combinado! E qual é a sua idade?\n\nUtilizo esta informação para fornecer conteúdos adequados. Pode deixar que fica entre a gente.😉",
-                  type: "text",
-                  flow: "onboarding",
-                };
-                openFlow = "01.03";
-                await userController.saveOpenFlow(userId, openFlow);
-                next();
-                break;
-
-              case "segment":
-                req.response = {
-                  message:
-                    "E em qual área você desenvolve seu Borogodó (ou em qual segmento de mercado você atua) 💼?",
-                  type: "text",
-                  flow: "onboarding",
-                };
-                openFlow = "01.04";
-                await userController.saveOpenFlow(userId, openFlow);
-                next();
-                break;
-            }
-
             // buscar para ver se tem openFlow - cadastro básico - OK
             const nextFlow = await userController.getOpenFlow(userId);
             console.log("nextFlow:", nextFlow);
@@ -229,6 +174,60 @@ const handleMessages = async (req, res, next) => {
                   flow: "menu",
                 };
                 await userController.saveOpenFlow(userId, "bria");
+                next();
+                break;
+            }
+
+            const nextQuestion =
+              await userController.getNextBasicProfileQuestion(userId);
+            console.log("nextQuestion:", nextQuestion);
+            let openFlow = "";
+            switch (nextQuestion) {
+              case "nickname":
+                req.response = {
+                  message:
+                    "Ótimo! Uma grande alegria em ter você aqui.🥳\n\nVamos configurar o seu perfil. Prometo que vai ser rapidinho. Escreva como você gostaria que eu te chamasse?",
+                  type: "text",
+                  flow: "onboarding",
+                };
+                openFlow = "01.01";
+                await userController.saveOpenFlow(userId, openFlow);
+                next();
+                break;
+
+              case "gender":
+                req.response = {
+                  message: `🤓 Uau... que nome bonito ${msg_body}! Um grande prazer em te conhecer.\n\nE qual o pronome de tratamento que você gostaria que eu utilize em nossas conversas?`,
+                  type: "text",
+                  flow: "gender",
+                };
+                openFlow = "01.02";
+
+                await userController.saveOpenFlow(userId, openFlow);
+                next();
+                break;
+
+              case "age":
+                req.response = {
+                  message:
+                    "Entendi, combinado! E qual é a sua idade?\n\nUtilizo esta informação para fornecer conteúdos adequados. Pode deixar que fica entre a gente.😉",
+                  type: "text",
+                  flow: "onboarding",
+                };
+                openFlow = "01.03";
+                await userController.saveOpenFlow(userId, openFlow);
+                next();
+                break;
+
+              case "segment":
+                req.response = {
+                  message:
+                    "E em qual área você desenvolve seu Borogodó (ou em qual segmento de mercado você atua) 💼?",
+                  type: "text",
+                  flow: "onboarding",
+                };
+                openFlow = "01.04";
+                await userController.saveOpenFlow(userId, openFlow);
                 next();
                 break;
             }
