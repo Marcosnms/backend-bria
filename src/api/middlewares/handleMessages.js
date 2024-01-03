@@ -87,11 +87,13 @@ const handleMessages = async (req, res, next) => {
         case "chegada":
           req.response = {
             message:
-              "Aguade um momento por gentileza, estou realizando minha apresentação... :)\n Ao terminar você vai ficar por dentro de tudo que eu posso fazer por você!",
+              "Aguade um momento por gentileza, estou realizando minha apresentação... :)\n\nAo terminar você vai ficar por dentro de tudo que eu posso fazer por você!",
             type: "text",
+            flow: "vazio",
           };
           next();
           break;
+
         // _______________________________________________ onboarding _______________________________________________ //
         case "onboarding":
           // qual o score do BasicProfile
@@ -251,7 +253,7 @@ const handleMessages = async (req, res, next) => {
           break;
 
         //_________________________________________________ profile ___________________________________________________ //
-        case "profile":
+        case "perfil":
           // Verificar se o perfil do usuário está completo.
           // Caso o perfil esteja incompleto, solicitar informações faltantes e atualizar o perfil.
           // Caso o perfil esteja completo, oferecer uma revisão ou atualização de dados.
@@ -291,7 +293,7 @@ const handleMessages = async (req, res, next) => {
           break;
 
         //_________________________________________________ servicos ___________________________________________________ //
-        case "servicos":
+        case "serviços":
           // Listar os serviços disponíveis na plataforma.
           // Oferecer a opção de buscar serviços específicos ou explorar categorias.
           // Auxiliar na contratação de serviços ou na oferta de serviços do usuário.
@@ -331,7 +333,7 @@ const handleMessages = async (req, res, next) => {
           break;
 
         //_________________________________________________ dao ___________________________________________________ //
-        case "dao":
+        case "borogodao":
           // Explicar o conceito e funcionamento da DAO da Borogoland.
           // Instruir sobre como se tornar um membro da DAO e participar das decisões.
           // Informar sobre votações, propostas e discussões atuais.
@@ -347,6 +349,26 @@ const handleMessages = async (req, res, next) => {
           // Direcionar o usuário para a área ou equipe de suporte apropriada.
           // Fornecer guias, FAQs e recursos úteis para autoajuda.
           // Garantir acompanhamento e satisfação com a resolução do problema.
+          next();
+          break;
+
+        //_________________________________________________ borogoland ___________________________________________________ //
+        case "info":
+          // Apresentar a Borogoland e seus objetivos.
+          // Explicar como a Borogoland funciona e como participar.
+          // Informar sobre os recursos e benefícios disponíveis.
+          // Fornecer informações sobre a equipe e os membros da comunidade.
+          // Auxiliar com dúvidas ou problemas relacionados à Borogoland.
+          next();
+          break;
+          
+        //_________________________________________________ mentoria_____________________________________________________ //
+        case "mentoria":
+          // Apresentar a mentoria e seus objetivos.
+          // Explicar como a mentoria funciona e como participar.
+          // Informar sobre os recursos e benefícios disponíveis.
+          // Fornecer informações sobre a equipe e os membros da comunidade.
+          // Auxiliar com dúvidas ou problemas relacionados à mentoria.
           next();
           break;
 

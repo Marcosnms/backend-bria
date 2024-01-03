@@ -57,6 +57,8 @@ const whatsappMiddleware = (req, res, next) => {
             name,
             msg_type,
           };
+      
+          console.log("Seleção de opção:", selectedOptionId)
 
           // opções de lista disponíveis
           switch (selectedOptionId) {
@@ -78,10 +80,10 @@ const whatsappMiddleware = (req, res, next) => {
                   "Fique atualizado com o conteúdo estruturado por nossos especialistas.\n\n" +
                   "Conheça as trilhas de conhecimento interativas e gamificadas que vão te ajudar a alcançar a sustentabilidade criativa, social e financeira.\n\n" +
                   "As trilhas atuais disponíveis são:\n\n" +
-                  "🧠 Trilha da Inteligência Artificial Generativa\n" +
-                  "🌐 Trilha da Web3\n" +
-                  "🌌  Trilha do Metaverso\n\n" +
-                  "Qual trilha você quer conhecer?",
+                  "🧠 1. Trilha da Inteligência Artificial Generativa\n" +
+                  "🌐 2. Trilha da Web3\n" +
+                  "🌌 3. Trilha do Metaverso\n\n" +
+                  "Digite o número da trilha que você quer saber mais:\n\n", 
                 type: "text",
                 flow: "upgrade",
               };
@@ -137,7 +139,7 @@ const whatsappMiddleware = (req, res, next) => {
               break;
 
             // TODO: 04.03 ÁREA DE MEMBROS - LISTA DE MEMBROS
-            case "lista_membros":
+            case "lista":
               // Envie uma imagem representando a área de membros
               req.response = {
                 message:
@@ -153,7 +155,7 @@ const whatsappMiddleware = (req, res, next) => {
               // Envie uma imagem representando a área de membros
               req.response = {
                 message:
-                  "Fale comigo! Como posso te ajudar?",
+                  "Fala comigo! Como posso te ajudar?",
                 type: "text",
                 flow: "suporte",
               };
@@ -173,7 +175,7 @@ const whatsappMiddleware = (req, res, next) => {
               break;
 
             // TODO: 06. PERFIL DO USUÁRIO
-            case "profile":
+            case "perfil":
               req.response = {
                 message:
                   "Em breve, vamos melhorar seu perfil. Por enquanto, me pergunte alguma coisa e eu te responderei. ",

@@ -92,7 +92,7 @@ app.post(
               from,
               message
             );
-          }, 30000);
+          }, 25000);
 
           // msge 03
           setTimeout(() => {

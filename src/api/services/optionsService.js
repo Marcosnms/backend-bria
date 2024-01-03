@@ -105,7 +105,7 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
                   description: "pesquise na lista de membros da Borogoland",
                 },
                 {
-                    id: "dao",
+                    id: "borogodao",
                     title: "🤝 DAO da Borogoland",
                     description:
                       "comunidade de descentralização da Borogoland",
@@ -174,7 +174,7 @@ const optionService = async (whatsappNumber, whatsapp_token, to, flow) => {
                   description: "informações sobre a terra do Borogodó",
                 },
                 {
-                  id: "profile",
+                  id: "perfil",
                   title: "👤 Seu Perfil",
                   description: "sobre o seu Borogodó",
                 },
