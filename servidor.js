@@ -20,6 +20,7 @@ const messageService = require("./src/api/services/messageService");
 const optionsService = require("./src/api/services/optionsService");
 const sendGenderTypes = require("./src/api/services/gender");
 const userController = require("./src/api/controllers/userController");
+const interactionController = require("./src/api/controllers/interactionController");
 
 // Configuração do dotenv
 dotenv.config();
@@ -171,7 +172,7 @@ app.post(
 
           // msge 09
           setTimeout(async () => {
-
+            let userId = await interactionController.findUserByWhatsappNumber(from)
             await userController.changeActiveFlow(userId, "onboarding");
             optionsService(
               whatsappNumber,

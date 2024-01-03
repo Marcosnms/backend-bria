@@ -64,16 +64,16 @@ model Interaction {
 }
 
 model BasicProfile {
-  id             Int     @id @default(autoincrement())
-  userId         String  @unique
-  user           User    @relation(fields: [userId], references: [id])
-  nickname       String?
-  gender         String?
-  country        String?
-  state          String?
-  city           String?
-  age            String?
-  segment        String?
+  id       Int     @id @default(autoincrement())
+  userId   String  @unique
+  user     User    @relation(fields: [userId], references: [id])
+  nickname String?
+  gender   String?
+  country  String?
+  state    String?
+  city     String?
+  age      String?
+  segment  String?
 
   @@map("basicProfile")
 }
