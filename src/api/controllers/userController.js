@@ -222,8 +222,6 @@ const userController = {
         estado: basicProfile.state || "não especificado",
         cidade: basicProfile.city || "não especificado",
         idade: basicProfile.age || "não especificado",
-        nivel_de_ensino: basicProfile.educationLevel || "não especificado",
-        profissao: basicProfile.profession || "não especificado",
         segmento: basicProfile.segment || "não especificado",
       };
 
