@@ -179,13 +179,6 @@ const handleMessages = async (req, res, next) => {
             let field = "";
             switch (nextFlow) {
               case null:
-                req.response = {
-                  message:
-                    "📝 Parece que seu perfil não está completo ainda. Preciso que você responda algumas perguntas para que eu possa te atender melhor 🌟. Vamos lá? 💪",
-                  type: "text",
-                  flow: "chegada",
-                };
-                next();
                 break;
 
               // TODO: adicionar response_validation com OpenAi. Caso a resposta não seja válida, enviar uma mensagem de erro e pedir para repetir
@@ -239,7 +232,6 @@ const handleMessages = async (req, res, next) => {
                 next();
                 break;
             }
-            // se for > 8, envia uma pergunta do fluxo avançado
           }
           next();
           break;

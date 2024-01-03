@@ -172,8 +172,6 @@ app.post(
 
           // msge 09
           setTimeout(async () => {
-            let userId = await interactionController.findUserByWhatsappNumber(from)
-            await userController.changeActiveFlow(userId, "onboarding");
             optionsService(
               whatsappNumber,
               process.env.WHATSAPP_TOKEN,
